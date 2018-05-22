@@ -1,7 +1,8 @@
-package ru.d_novikov.bluetoothapp
+package ru.d_novikov.bluetoothapp.screens
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import ru.d_novikov.bluetoothapp.R
 
 class MainActivity : AppCompatActivity() {
 
