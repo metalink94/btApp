@@ -1,26 +1,19 @@
 package ru.d_novikov.bluetoothapp.screens.main
 
 import android.bluetooth.BluetoothAdapter
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
 import butterknife.BindView
 import butterknife.ButterKnife
 import ru.d_novikov.bluetoothapp.R
+import android.support.v7.app.AlertDialog
 
 
-class MainActivity : AppCompatActivity(), MainView {
-    override fun showAlertDialog() {
 
-        
-    }
 
-    override fun initPager(bluetoothAdapter: BluetoothAdapter) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListener {
 
     private val mainPresenter: MainPresenter = MainPresenter()
 
@@ -38,14 +31,32 @@ class MainActivity : AppCompatActivity(), MainView {
         mainPresenter.onCreate()
     }
 
-    override fun onBluetooth() {
-        val turnOn = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-        startActivityForResult(turnOn, 0)
-        Toast.makeText(this, "Turned on", Toast.LENGTH_LONG).show()
+    override fun showAlertDialog() {
+        AlertDialog.Builder(this)
+                .setTitle("Ошибка")
+                .setMessage("Ваше устройство не поддерживает Bluetooth")
+                .setPositiveButton("Выход", { dialog, which -> System.exit(0) })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show()
+
     }
 
-    override fun searchVisibleDevices() {
-        val getVisible = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
-        startActivityForResult(getVisible, 0)
+    override fun initPager() {
+        pager.adapter = MainPagerAdapter(supportFragmentManager)
+        tabLayout.setupWithViewPager(pager)
+        tabLayout.addOnTabSelectedListener(this)
+    }
+
+    override fun onTabReselected(tab: TabLayout.Tab?) {
+
+    }
+
+    override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+    }
+
+    override fun onTabSelected(tab: TabLayout.Tab?) {
+        val tabFromLayout = tab ?: return
+        pager.setCurrentItem(tabFromLayout.position, false)
     }
 }

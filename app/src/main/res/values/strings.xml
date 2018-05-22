@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BluetoothApp</string>
+    <string name="stop">Стоп</string>
+    <string name="go">Поехали</string>
 </resources>
