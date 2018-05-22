@@ -5,9 +5,10 @@ import ru.d_novikov.bluetoothapp.mvp.ViewPresenter
 
 class OpenScreenPresenter: ViewPresenter<OpenScreenView>() {
 
-    val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
     fun onCreate() {
+        if (bluetoothAdapter == null) return
         if (!bluetoothAdapter.isEnabled) {
             getView()?.onBluetooth()
         }
