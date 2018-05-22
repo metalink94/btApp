@@ -1,9 +1,10 @@
 package ru.d_novikov.bluetoothapp.screens.main
 
+import android.bluetooth.BluetoothAdapter
 import ru.d_novikov.bluetoothapp.mvp.IView
 
 interface MainView: IView {
-    fun onBluetooth()
-    fun searchVisibleDevices()
+    fun showAlertDialog()
+    fun initPager(bluetoothAdapter: BluetoothAdapter)
 
 }

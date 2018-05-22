@@ -12,18 +12,9 @@ class MainPresenter: ViewPresenter<MainView>() {
     private var pairedDevices: Set<BluetoothDevice> = mutableSetOf()
 
     fun onCreate() {
-        if (!bluetoothAdapter.isEnabled) {
-            getView()?.onBluetooth()
+        if (bluetoothAdapter == null) {
+            getView()?.showAlertDialog()
         }
-        getView()?.searchVisibleDevices()
-        getPairedDevices()
-    }
-
-    private fun getPairedDevices() {
-        pairedDevices = bluetoothAdapter.bondedDevices
-        for((i, bt) in pairedDevices.withIndex()) {
-            Log.d("Bluetooth", "Devices " + bt.name + " count = " + i)
-        }
-
+        getView()?.initPager(bluetoothAdapter)
     }
 }
