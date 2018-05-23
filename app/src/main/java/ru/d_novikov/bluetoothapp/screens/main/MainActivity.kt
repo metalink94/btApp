@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
     }
 
     override fun initPager() {
-        Log.d("INITPAGER", "in init pager")
         container.adapter = MainPagerAdapter(supportFragmentManager)
         tab_layout.setupWithViewPager(container)
         tab_layout.addOnTabSelectedListener(this)

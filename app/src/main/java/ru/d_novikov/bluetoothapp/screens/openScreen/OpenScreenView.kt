@@ -6,5 +6,7 @@ interface OpenScreenView: IView {
     fun setButtonStart()
     fun setButtonStop()
     fun onBluetooth()
+    fun scanDevices()
+    fun stopScanDevices()
 
 }

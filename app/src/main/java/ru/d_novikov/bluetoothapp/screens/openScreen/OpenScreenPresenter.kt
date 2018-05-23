@@ -2,6 +2,9 @@ package ru.d_novikov.bluetoothapp.screens.openScreen
 
 import android.bluetooth.BluetoothAdapter
 import ru.d_novikov.bluetoothapp.mvp.ViewPresenter
+import android.bluetooth.BluetoothDevice
+import android.util.Log
+
 
 class OpenScreenPresenter: ViewPresenter<OpenScreenView>() {
 
@@ -12,6 +15,24 @@ class OpenScreenPresenter: ViewPresenter<OpenScreenView>() {
         if (!bluetoothAdapter.isEnabled) {
             getView()?.onBluetooth()
         }
+        getPairedDevices()
+
+    }
+
+    private fun getPairedDevices() {
+        val pairedDevices = bluetoothAdapter.bondedDevices
+        if (pairedDevices.isNotEmpty()) {
+            for (device in pairedDevices) {
+                Log.d("PAIRED", "pairedDevice = " + device.name)
+            }
+        } else {
+            startScan()
+        }
+    }
+
+    private fun startScan() {
+        getView()?.scanDevices()
+        bluetoothAdapter.startDiscovery()
     }
 
     fun onButtonClick() {
@@ -20,5 +41,10 @@ class OpenScreenPresenter: ViewPresenter<OpenScreenView>() {
         } else {
             getView()?.setButtonStop()
         }
+    }
+
+    private fun stopScan() {
+        getView()?.stopScanDevices()
+        bluetoothAdapter.cancelDiscovery()
     }
 }

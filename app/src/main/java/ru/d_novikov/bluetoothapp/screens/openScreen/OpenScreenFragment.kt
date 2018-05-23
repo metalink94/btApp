@@ -13,6 +13,15 @@ import android.widget.Toast
 import butterknife.BindView
 import butterknife.OnClick
 import ru.d_novikov.bluetoothapp.R
+import ru.d_novikov.bluetoothapp.models.DeviceItem
+import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.util.Log
+import android.content.IntentFilter
+
+
+
 
 class OpenScreenFragment: Fragment(), OpenScreenView {
 
@@ -65,5 +74,26 @@ class OpenScreenFragment: Fragment(), OpenScreenView {
     @OnClick(R.id.button)
     fun onButtonClick(view: View) {
         openScreenPresenter.onButtonClick()
+    }
+
+    override fun scanDevices() {
+        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        activity?.registerReceiver(bReciever, filter)
+    }
+
+    override fun stopScanDevices() {
+        activity?.unregisterReceiver(bReciever)
+    }
+
+    private val bReciever = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.action
+            if (BluetoothDevice.ACTION_FOUND == action) {
+                val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                // Create a new device item
+                val newDevice = DeviceItem(device.name, device.address, false)
+                Log.d("FIND", "find device = " + device.name)
+            }
+        }
     }
 }
