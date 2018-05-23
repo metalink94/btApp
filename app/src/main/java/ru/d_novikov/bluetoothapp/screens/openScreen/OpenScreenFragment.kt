@@ -22,12 +22,6 @@ import butterknife.BindView
 import butterknife.OnClick
 import ru.d_novikov.bluetoothapp.R
 import ru.d_novikov.bluetoothapp.connecting.BluetoothChatService
-import ru.d_novikov.bluetoothapp.connecting.ConnectThread
-import ru.d_novikov.bluetoothapp.connecting.ServerConnectThread
-import java.util.*
-import android.provider.Settings.Global.DEVICE_NAME
-
-
 
 
 class OpenScreenFragment : Fragment(), OpenScreenView {
@@ -146,10 +140,10 @@ class OpenScreenFragment : Fragment(), OpenScreenView {
                 MESSAGE_READ -> {
                     val readBuf = msg.obj as ByteArray
                     // construct a string from the valid bytes in the buffer
-                    val readMessage = String(readBuf, 0, msg.arg1)
+                    var readMessage = String(readBuf, 0, msg.arg1)
+                    readMessage = readMessage.replace("[^\\d]", "")
                     if (readMessage.isNotEmpty()) {
-                        Toast.makeText(activity, readMessage, Toast.LENGTH_SHORT).show()
-                        Log.d("javaClass", "Read Message = " + readMessage)
+                        Log.d("javaClass", "Read Message = " + readMessage + " messageLen = " + readMessage.length)
                     }
                 }
                 MESSAGE_DEVICE_NAME -> {
@@ -161,6 +155,18 @@ class OpenScreenFragment : Fragment(), OpenScreenView {
                         Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        bluetoothChatService?.stop()
+        bluetoothChatService = null
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        bluetoothChatService?.stop()
+        bluetoothChatService = null
     }
 
     override fun onDestroy() {
