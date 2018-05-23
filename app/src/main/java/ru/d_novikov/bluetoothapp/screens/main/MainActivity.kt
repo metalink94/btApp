@@ -1,8 +1,11 @@
 package ru.d_novikov.bluetoothapp.screens.main
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import butterknife.ButterKnife
@@ -19,7 +22,11 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
         setContentView(R.layout.activity_main)
         ButterKnife.bind(this)
         mainPresenter.setView(this)
-        mainPresenter.onCreate()
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, Array<String>(1) { Manifest.permission.ACCESS_FINE_LOCATION }, 1)
+        } else {
+            mainPresenter.onCreate()
+        }
     }
 
     override fun showAlertDialog() {
@@ -49,5 +56,14 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
     override fun onTabSelected(tab: TabLayout.Tab?) {
         val tabFromLayout = tab ?: return
         container.setCurrentItem(tabFromLayout.position, false)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1) {
+            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mainPresenter.onCreate()
+            }
+        }
     }
 }

@@ -1,9 +1,14 @@
 package ru.d_novikov.bluetoothapp.screens.openScreen
 
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,20 +18,11 @@ import android.widget.Toast
 import butterknife.BindView
 import butterknife.OnClick
 import ru.d_novikov.bluetoothapp.R
-import ru.d_novikov.bluetoothapp.models.DeviceItem
-import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.util.Log
-import android.content.IntentFilter
 
 
-
-
-class OpenScreenFragment: Fragment(), OpenScreenView {
+class OpenScreenFragment : Fragment(), OpenScreenView {
 
     var openScreenPresenter = OpenScreenPresenter()
-
 
 
     @BindView(R.id.button)
@@ -82,9 +78,9 @@ class OpenScreenFragment: Fragment(), OpenScreenView {
     }
 
     override fun scanDevices(bluetoothAdapter: BluetoothAdapter) {
+        bluetoothAdapter.startDiscovery()
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         activity?.registerReceiver(bReciever, filter)
-        bluetoothAdapter.startDiscovery()
     }
 
     override fun stopScanDevices() {
@@ -99,13 +95,11 @@ class OpenScreenFragment: Fragment(), OpenScreenView {
     private val bReciever = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
-            Log.d("RECEIVER", "start search")
-            Toast.makeText(activity, "start search", Toast.LENGTH_LONG).show()
             if (BluetoothDevice.ACTION_FOUND == action) {
                 val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                 // Create a new device item
-                val newDevice = DeviceItem(device.name, device.address, false)
-                Log.d("RECEIVER", "find device = " + device.name)
+//                val newDevice = DeviceItem(device.name, device.address, false)
+                Log.d("BroadcastReceiver", "find device = " + device.name + " macAddress " + device.address + " device Type " + device.type)
             }
         }
     }
