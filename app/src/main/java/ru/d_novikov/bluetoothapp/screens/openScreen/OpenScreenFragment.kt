@@ -27,6 +27,8 @@ class OpenScreenFragment: Fragment(), OpenScreenView {
 
     var openScreenPresenter = OpenScreenPresenter()
 
+
+
     @BindView(R.id.button)
     lateinit var button: TextView
 
@@ -41,8 +43,11 @@ class OpenScreenFragment: Fragment(), OpenScreenView {
 
     companion object {
 
+        var bluetoothAdapter: BluetoothAdapter? = null
+
         @JvmStatic
-        fun getInstance(): OpenScreenFragment {
+        fun getInstance(bluetoothAdapter: BluetoothAdapter?): OpenScreenFragment {
+            this.bluetoothAdapter = bluetoothAdapter
             return OpenScreenFragment()
         }
     }
@@ -54,7 +59,7 @@ class OpenScreenFragment: Fragment(), OpenScreenView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         openScreenPresenter.setView(this)
-        openScreenPresenter.onCreate()
+        openScreenPresenter.onCreate(bluetoothAdapter)
     }
 
     override fun onBluetooth() {
@@ -84,6 +89,11 @@ class OpenScreenFragment: Fragment(), OpenScreenView {
 
     override fun stopScanDevices() {
         activity?.unregisterReceiver(bReciever)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        openScreenPresenter.onActivityResult(requestCode, resultCode, data)
     }
 
     private val bReciever = object : BroadcastReceiver() {

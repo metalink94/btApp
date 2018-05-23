@@ -1,5 +1,6 @@
 package ru.d_novikov.bluetoothapp.screens.main
 
+import android.bluetooth.BluetoothAdapter
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v7.app.AlertDialog
@@ -31,8 +32,8 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
 
     }
 
-    override fun initPager() {
-        container.adapter = MainPagerAdapter(supportFragmentManager)
+    override fun initPager(bluetoothAdapter: BluetoothAdapter?) {
+        container.adapter = MainPagerAdapter(supportFragmentManager, bluetoothAdapter)
         tab_layout.setupWithViewPager(container)
         tab_layout.addOnTabSelectedListener(this)
     }

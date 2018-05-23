@@ -12,6 +12,6 @@ class MainPresenter : ViewPresenter<MainView>() {
         if (bluetoothAdapter == null) {
             getView()?.showAlertDialog()
         }
-        getView()?.initPager()
+        getView()?.initPager(bluetoothAdapter)
     }
 }
