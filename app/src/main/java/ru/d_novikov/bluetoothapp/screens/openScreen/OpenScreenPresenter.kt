@@ -2,6 +2,7 @@ package ru.d_novikov.bluetoothapp.screens.openScreen
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import ru.d_novikov.bluetoothapp.mvp.ViewPresenter
 import android.util.Log
@@ -10,6 +11,7 @@ import android.util.Log
 class OpenScreenPresenter: ViewPresenter<OpenScreenView>() {
 
     lateinit var bluetoothAdapter: BluetoothAdapter
+    val BLUETOOTH_DEVICE_NAME = "H-C-2010-06-01"
 
     fun onCreate(bluetoothAdapter: BluetoothAdapter?) {
         if (bluetoothAdapter == null) return
@@ -26,7 +28,7 @@ class OpenScreenPresenter: ViewPresenter<OpenScreenView>() {
         val pairedDevices = bluetoothAdapter.bondedDevices
         if (pairedDevices.isNotEmpty()) {
             for (device in pairedDevices) {
-                Log.d("PAIRED", "pairedDevice = " + device.name)
+                onReceive(device)
             }
         } else {
             startScan()
@@ -53,6 +55,13 @@ class OpenScreenPresenter: ViewPresenter<OpenScreenView>() {
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             getPairedDevices()
+        }
+    }
+
+    fun onReceive(device: BluetoothDevice) {
+        if (device.name != null && device.name == BLUETOOTH_DEVICE_NAME) {
+            getView()?.connect(device)
+            getView()?.stopScanDevices()
         }
     }
 }

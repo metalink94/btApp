@@ -16,18 +16,18 @@ class ConnectThread : Thread() {
         try {
             temp = bTDevice.createRfcommSocketToServiceRecord(mUUID)
         } catch (e: IOException) {
-            Log.d("CONNECTTHREAD", "Could not create RFCOMM socket:" + e.toString())
+            Log.d("javaClass", "Could not create RFCOMM socket:" + e.toString())
             return false
         }
 
         try {
             bTSocket?.connect()
         } catch (e: IOException) {
-            Log.d("CONNECTTHREAD", "Could not connect: " + e.toString())
+            Log.d("javaClass", "Could not connect: " + e.toString())
             try {
                 bTSocket?.close()
             } catch (close: IOException) {
-                Log.d("CONNECTTHREAD", "Could not close connection:" + e.toString())
+                Log.d("javaClass", "Could not close connection:" + e.toString())
                 return false
             }
 
@@ -40,7 +40,7 @@ class ConnectThread : Thread() {
         try {
             bTSocket?.close()
         } catch (e: IOException) {
-            Log.d("CONNECTTHREAD", "Could not close connection:" + e.toString())
+            Log.d("javaClass", "Could not close connection:" + e.toString())
             return false
         }
 

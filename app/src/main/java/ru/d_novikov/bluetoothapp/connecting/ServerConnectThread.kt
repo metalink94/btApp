@@ -15,14 +15,14 @@ class ServerConnectThread : Thread() {
         try {
             temp = bTAdapter.listenUsingRfcommWithServiceRecord("Service_Name", mUUID)
         } catch (e: IOException) {
-            Log.d("SERVERCONNECT", "Could not get a BluetoothServerSocket:" + e.toString())
+            Log.d("javaClass", "Could not get a BluetoothServerSocket:" + e.toString())
         }
 
         while (true) {
             try {
                 bTSocket = temp?.accept()
             } catch (e: IOException) {
-                Log.d("SERVERCONNECT", "Could not accept an incoming connection.")
+                Log.d("javaClass", "Could not accept an incoming connection.")
                 break
             }
 
@@ -30,7 +30,7 @@ class ServerConnectThread : Thread() {
                 try {
                     temp?.close()
                 } catch (e: IOException) {
-                    Log.d("SERVERCONNECT", "Could not close ServerSocket:" + e.toString())
+                    Log.d("javaClass", "Could not close ServerSocket:" + e.toString())
                 }
 
                 break
@@ -42,7 +42,7 @@ class ServerConnectThread : Thread() {
         try {
             bTSocket?.close()
         } catch (e: IOException) {
-            Log.d("SERVERCONNECT", "Could not close connection:" + e.toString())
+            Log.d("javaClass", "Could not close connection:" + e.toString())
         }
 
     }
