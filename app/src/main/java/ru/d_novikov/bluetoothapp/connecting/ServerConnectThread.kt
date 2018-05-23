@@ -20,7 +20,7 @@ class ServerConnectThread : Thread() {
 
         while (true) {
             try {
-                bTSocket = temp!!.accept()
+                bTSocket = temp?.accept()
             } catch (e: IOException) {
                 Log.d("SERVERCONNECT", "Could not accept an incoming connection.")
                 break
@@ -28,7 +28,7 @@ class ServerConnectThread : Thread() {
 
             if (bTSocket != null) {
                 try {
-                    temp.close()
+                    temp?.close()
                 } catch (e: IOException) {
                     Log.d("SERVERCONNECT", "Could not close ServerSocket:" + e.toString())
                 }
@@ -40,7 +40,7 @@ class ServerConnectThread : Thread() {
 
     fun closeConnect() {
         try {
-            bTSocket!!.close()
+            bTSocket?.close()
         } catch (e: IOException) {
             Log.d("SERVERCONNECT", "Could not close connection:" + e.toString())
         }

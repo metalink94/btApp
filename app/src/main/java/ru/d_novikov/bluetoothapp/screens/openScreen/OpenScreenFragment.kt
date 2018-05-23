@@ -76,9 +76,10 @@ class OpenScreenFragment: Fragment(), OpenScreenView {
         openScreenPresenter.onButtonClick()
     }
 
-    override fun scanDevices() {
+    override fun scanDevices(bluetoothAdapter: BluetoothAdapter) {
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
         activity?.registerReceiver(bReciever, filter)
+        bluetoothAdapter.startDiscovery()
     }
 
     override fun stopScanDevices() {
@@ -88,11 +89,13 @@ class OpenScreenFragment: Fragment(), OpenScreenView {
     private val bReciever = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
+            Log.d("RECEIVER", "start search")
+            Toast.makeText(activity, "start search", Toast.LENGTH_LONG).show()
             if (BluetoothDevice.ACTION_FOUND == action) {
                 val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
                 // Create a new device item
                 val newDevice = DeviceItem(device.name, device.address, false)
-                Log.d("FIND", "find device = " + device.name)
+                Log.d("RECEIVER", "find device = " + device.name)
             }
         }
     }

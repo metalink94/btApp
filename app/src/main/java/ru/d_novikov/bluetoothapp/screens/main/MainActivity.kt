@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import butterknife.ButterKnife
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.d_novikov.bluetoothapp.R

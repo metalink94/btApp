@@ -21,11 +21,11 @@ class ConnectThread : Thread() {
         }
 
         try {
-            bTSocket!!.connect()
+            bTSocket?.connect()
         } catch (e: IOException) {
             Log.d("CONNECTTHREAD", "Could not connect: " + e.toString())
             try {
-                bTSocket!!.close()
+                bTSocket?.close()
             } catch (close: IOException) {
                 Log.d("CONNECTTHREAD", "Could not close connection:" + e.toString())
                 return false
@@ -38,7 +38,7 @@ class ConnectThread : Thread() {
 
     fun cancel(): Boolean {
         try {
-            bTSocket!!.close()
+            bTSocket?.close()
         } catch (e: IOException) {
             Log.d("CONNECTTHREAD", "Could not close connection:" + e.toString())
             return false

@@ -2,7 +2,6 @@ package ru.d_novikov.bluetoothapp.screens.openScreen
 
 import android.bluetooth.BluetoothAdapter
 import ru.d_novikov.bluetoothapp.mvp.ViewPresenter
-import android.bluetooth.BluetoothDevice
 import android.util.Log
 
 
@@ -31,8 +30,7 @@ class OpenScreenPresenter: ViewPresenter<OpenScreenView>() {
     }
 
     private fun startScan() {
-        getView()?.scanDevices()
-        bluetoothAdapter.startDiscovery()
+        getView()?.scanDevices(bluetoothAdapter)
     }
 
     fun onButtonClick() {
