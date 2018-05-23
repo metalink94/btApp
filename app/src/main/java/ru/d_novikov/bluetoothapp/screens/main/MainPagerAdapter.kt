@@ -20,6 +20,6 @@ class MainPagerAdapter(val fm: FragmentManager): FragmentPagerAdapter(fm) {
     }
 
     override fun getCount(): Int {
-        return fm.fragments.size
+        return 3
     }
 }
