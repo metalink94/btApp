@@ -1,6 +1,7 @@
 package ru.d_novikov.bluetoothapp.screens.openScreen
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
@@ -18,29 +19,39 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import butterknife.BindView
-import butterknife.OnClick
 import ru.d_novikov.bluetoothapp.R
 import ru.d_novikov.bluetoothapp.connecting.BluetoothChatService
+import ru.d_novikov.bluetoothapp.interfaces.DataSendListener
 
 
-class OpenScreenFragment : Fragment(), OpenScreenView {
+class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
+    override fun onClick(v: View?) {
+        when(v?.id) {
+            R.id.button -> openScreenPresenter.onButtonClick()
+        }
+    }
 
     var openScreenPresenter = OpenScreenPresenter()
     var bluetoothChatService: BluetoothChatService? = null
 
-
-    @BindView(R.id.button)
     lateinit var button: TextView
 
-    @BindView(R.id.icon_state)
     lateinit var icon: ImageView
 
-    @BindView(R.id.person_state)
     lateinit var personState: TextView
 
-    @BindView(R.id.timer)
     lateinit var timer: TextView
+
+    lateinit var callback: DataSendListener
+
+    override fun onAttach(activity: Activity) {
+        super.onAttach(activity)
+        if (activity is DataSendListener) {
+            callback = activity
+        } else {
+            Log.e("OpenScreenFragment", "activity must implemet DataSendListener")
+        }
+    }
 
     companion object {
 
@@ -64,7 +75,12 @@ class OpenScreenFragment : Fragment(), OpenScreenView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_open_screen, container, false)
+        val view = inflater.inflate(R.layout.fragment_open_screen, container, false)
+        button = view.findViewById(R.id.button)
+        icon = view.findViewById(R.id.icon_state)
+        personState = view.findViewById(R.id.person_state)
+        timer = view.findViewById(R.id.timer)
+        return view
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +92,6 @@ class OpenScreenFragment : Fragment(), OpenScreenView {
     override fun onBluetooth() {
         val turnOn = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
         startActivityForResult(turnOn, 0)
-        Toast.makeText(activity, "Turned on", Toast.LENGTH_LONG).show()
     }
 
     override fun setButtonStart() {
@@ -87,11 +102,6 @@ class OpenScreenFragment : Fragment(), OpenScreenView {
         button.text = getString(R.string.stop)
     }
 
-    @OnClick(R.id.button)
-    fun onButtonClick(view: View) {
-        openScreenPresenter.onButtonClick()
-    }
-
     override fun scanDevices(bluetoothAdapter: BluetoothAdapter) {
         bluetoothAdapter.startDiscovery()
         val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
@@ -99,6 +109,7 @@ class OpenScreenFragment : Fragment(), OpenScreenView {
     }
 
     override fun stopScanDevices() {
+        Log.d("javaClass", "isOrdered " + bReciever.isOrderedBroadcast)
         activity?.unregisterReceiver(bReciever)
     }
 
@@ -130,30 +141,7 @@ class OpenScreenFragment : Fragment(), OpenScreenView {
     private val handler = @SuppressLint("HandlerLeak")
     object : Handler() {
         override fun handleMessage(msg: Message) {
-            when (msg.what) {
-                MESSAGE_WRITE -> {
-                    val writeBuf = msg.obj as ByteArray
-                    // construct a string from the buffer
-                    val writeMessage = String(writeBuf)
-                    Log.d("javaClass", "Write Message = " + writeMessage)
-                }
-                MESSAGE_READ -> {
-                    val readBuf = msg.obj as ByteArray
-                    // construct a string from the valid bytes in the buffer
-                    var readMessage = String(readBuf, 0, msg.arg1)
-                    readMessage = readMessage.replace("[^\\d]", "")
-                    if (readMessage.isNotEmpty()) {
-                        Log.d("javaClass", "Read Message = " + readMessage + " messageLen = " + readMessage.length)
-                    }
-                }
-                MESSAGE_DEVICE_NAME -> {
-                    // save the connected device's name
-                    val mConnectedDeviceName = msg.getData().getString(DEVICE_NAME)
-                    Toast.makeText(activity, "Connected to $mConnectedDeviceName", Toast.LENGTH_SHORT).show()
-                }
-                MESSAGE_TOAST -> Toast.makeText(activity, msg.data.getString(TOAST),
-                        Toast.LENGTH_SHORT).show()
-            }
+            openScreenPresenter.onHandleMessage(msg)
         }
     }
 
@@ -174,4 +162,13 @@ class OpenScreenFragment : Fragment(), OpenScreenView {
         bluetoothChatService?.stop()
         bluetoothChatService = null
     }
+
+    override fun showToast(message: String) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDataReceived(readMessage: String) {
+        callback.onDataReceived(readMessage)
+    }
+
 }

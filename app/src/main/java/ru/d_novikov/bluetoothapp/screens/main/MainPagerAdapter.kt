@@ -10,10 +10,13 @@ import ru.d_novikov.bluetoothapp.screens.openScreen.OpenScreenFragment
 class MainPagerAdapter(val fm: FragmentManager,
                        val bluetoothAdapter: BluetoothAdapter?) : FragmentPagerAdapter(fm) {
 
+    var data: String = ""
+    private val chartFragment = ChartFragment.getInstance()
+
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> OpenScreenFragment.getInstance(bluetoothAdapter)
-            1 -> ChartFragment.getInstance()
+            1 -> chartFragment
             2 -> ChartFragment.getInstance()
             else -> {
                 OpenScreenFragment.getInstance(bluetoothAdapter)
@@ -23,5 +26,9 @@ class MainPagerAdapter(val fm: FragmentManager,
 
     override fun getCount(): Int {
         return 3
+    }
+
+    fun updateChart(data: String) {
+        chartFragment?.update(data)
     }
 }

@@ -4,26 +4,33 @@ import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Environment
 import android.support.design.widget.TabLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
-import butterknife.ButterKnife
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.d_novikov.bluetoothapp.R
+import ru.d_novikov.bluetoothapp.interfaces.DataSendListener
+import ru.d_novikov.bluetoothapp.models.SaveModel
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
 
 
-class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListener {
+class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListener, DataSendListener {
 
     private val mainPresenter: MainPresenter = MainPresenter()
+
+    private var mainPagerAdapter: MainPagerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ButterKnife.bind(this)
         mainPresenter.setView(this)
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, Array<String>(1) { Manifest.permission.ACCESS_FINE_LOCATION }, 1)
+            ActivityCompat.requestPermissions(this, Array(1) { Manifest.permission.ACCESS_FINE_LOCATION }, 1)
         } else {
             mainPresenter.onCreate()
         }
@@ -40,7 +47,8 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
     }
 
     override fun initPager(bluetoothAdapter: BluetoothAdapter?) {
-        container.adapter = MainPagerAdapter(supportFragmentManager, bluetoothAdapter)
+        mainPagerAdapter = MainPagerAdapter(supportFragmentManager, bluetoothAdapter)
+        container.adapter = mainPagerAdapter
         tab_layout.setupWithViewPager(container)
         tab_layout.addOnTabSelectedListener(this)
     }
@@ -66,4 +74,41 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
             }
         }
     }
+
+    override fun onDataReceived(data: String) {
+        mainPagerAdapter?.updateChart(data)
+        mainPresenter.onDataReceved(data)
+    }
+
+    override fun saveToFile(time: String, dataList: MutableList<SaveModel>) {
+        try {
+            val title = time.replace(":","_").replace(".","_")
+            Log.d("javaClass", "Title $title")
+            val myFile = File(this.getExternalFilesDir(null), "$title.txt")
+            if (!myFile.exists())
+                myFile.createNewFile()
+
+            val writer = FileWriter(myFile)
+            for (str in dataList) {
+                writer.write(str.time + ": " + str.data + "\n")
+            }
+            writer.close()
+        } catch (e: IOException) {
+            // TODO Auto-generated catch block
+            e.printStackTrace()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("MainActivity", "onPause()")
+        mainPresenter.onDestroy()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("MainActivity", "onDestroy()")
+        mainPresenter.onDestroy()
+    }
+
 }

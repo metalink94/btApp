@@ -11,5 +11,7 @@ interface OpenScreenView: IView {
     fun scanDevices(bluetoothAdapter: BluetoothAdapter)
     fun stopScanDevices()
     fun connect(device: BluetoothDevice)
+    fun showToast(message: String)
+    fun onDataReceived(readMessage: String)
 
 }
