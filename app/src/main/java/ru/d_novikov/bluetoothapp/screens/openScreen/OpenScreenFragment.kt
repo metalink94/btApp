@@ -109,7 +109,6 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
     }
 
     override fun stopScanDevices() {
-        Log.d("javaClass", "isOrdered " + bReciever.isOrderedBroadcast)
         activity?.unregisterReceiver(bReciever)
     }
 
@@ -159,6 +158,7 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        openScreenPresenter.onDestroy()
         bluetoothChatService?.stop()
         bluetoothChatService = null
     }

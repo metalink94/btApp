@@ -4,19 +4,31 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
+import android.os.CountDownTimer
 import android.os.Message
 import android.util.Log
+import io.realm.Realm
+import io.realm.kotlin.createObject
+import io.realm.kotlin.where
+import ru.d_novikov.bluetoothapp.models.BdModel
 import ru.d_novikov.bluetoothapp.mvp.ViewPresenter
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
 
     lateinit var bluetoothAdapter: BluetoothAdapter
     val BLUETOOTH_DEVICE_NAME = "H-C-2010-06-01"
+    var isNeedSend: Boolean = true
+    val realm = Realm.getDefaultInstance()
 
     fun onCreate(bluetoothAdapter: BluetoothAdapter?) {
         if (bluetoothAdapter == null) return
         this.bluetoothAdapter = bluetoothAdapter
+        realm.executeTransaction { realm ->
+            realm.deleteAll()
+        }
         if (!bluetoothAdapter.isEnabled) {
             getView()?.onBluetooth()
         } else {
@@ -25,7 +37,6 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     }
 
     private fun getPairedDevices() {
-        Log.d("getPairedDevices", " SCAN MODE " + bluetoothAdapter.scanMode)
         val pairedDevices = bluetoothAdapter.bondedDevices
         if (pairedDevices.isNotEmpty()) {
             for (device in pairedDevices) {
@@ -74,10 +85,11 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
             OpenScreenFragment.MESSAGE_READ -> {
                 val readBuf = msg.obj as ByteArray
                 // construct a string from the valid bytes in the buffer
-                var readMessage = String(readBuf, 0, msg.arg1)
-                readMessage = readMessage.replace("[^\\d]", "")
-                if (readMessage.isNotEmpty()) {
-                    getView()?.onDataReceived(readMessage)
+                val readMessage = String(readBuf, 0, msg.arg1)
+                val str = readMessage.replace("[^\\d.]", "")
+                if (str.matches(Regex("[0-9]+"))) {
+                    addToRealm(str)
+                    getView()?.onDataReceived(str)
                 }
             }
             OpenScreenFragment.MESSAGE_DEVICE_NAME -> {
@@ -88,5 +100,23 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
             }
             OpenScreenFragment.MESSAGE_TOAST -> getView()?.showToast(msg.data.getString(OpenScreenFragment.TOAST))
         }
+    }
+
+    private fun addToRealm(readMessage: String) {
+        basicCRUD(realm, readMessage)
+    }
+
+    private fun basicCRUD(realm: Realm, readMessage: String) {
+        val results = realm.where<BdModel>().findAll()
+        realm.executeTransaction({
+            val bdModel = it.createObject<BdModel>(results.size)
+            bdModel.valueX = Calendar.getInstance().time
+            val int = readMessage.toIntOrNull() ?: 0
+            bdModel.valueY = int
+        })
+    }
+
+    fun onDestroy() {
+        realm.close()
     }
 }

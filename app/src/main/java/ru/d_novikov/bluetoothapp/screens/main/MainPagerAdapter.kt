@@ -11,7 +11,7 @@ class MainPagerAdapter(val fm: FragmentManager,
                        val bluetoothAdapter: BluetoothAdapter?) : FragmentPagerAdapter(fm) {
 
     var data: String = ""
-    private val chartFragment = ChartFragment.getInstance()
+    val chartFragment = ChartFragment.getInstance()
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
@@ -28,7 +28,9 @@ class MainPagerAdapter(val fm: FragmentManager,
         return 3
     }
 
-    fun updateChart(data: String) {
-        chartFragment?.update(data)
+    fun updateChart(position: Int) {
+        if (position == 1) {
+            chartFragment.updateChart()
+        }
     }
 }

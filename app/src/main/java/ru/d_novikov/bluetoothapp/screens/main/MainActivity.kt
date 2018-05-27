@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import ru.d_novikov.bluetoothapp.R
 import ru.d_novikov.bluetoothapp.interfaces.DataSendListener
 import ru.d_novikov.bluetoothapp.models.SaveModel
+import ru.d_novikov.bluetoothapp.screens.chart.ChartFragment
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
     override fun initPager(bluetoothAdapter: BluetoothAdapter?) {
         mainPagerAdapter = MainPagerAdapter(supportFragmentManager, bluetoothAdapter)
         container.adapter = mainPagerAdapter
+        container.offscreenPageLimit = 5
         tab_layout.setupWithViewPager(container)
         tab_layout.addOnTabSelectedListener(this)
     }
@@ -64,6 +66,7 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
     override fun onTabSelected(tab: TabLayout.Tab?) {
         val tabFromLayout = tab ?: return
         container.setCurrentItem(tabFromLayout.position, false)
+        mainPagerAdapter?.updateChart(tabFromLayout.position)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -76,7 +79,6 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
     }
 
     override fun onDataReceived(data: String) {
-        mainPagerAdapter?.updateChart(data)
         mainPresenter.onDataReceved(data)
     }
 

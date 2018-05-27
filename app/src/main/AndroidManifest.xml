@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        >
+        android:name=".BluetoothApp">
         <activity android:name=".screens.main.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>

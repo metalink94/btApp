@@ -1,6 +1,7 @@
 package ru.d_novikov.bluetoothapp.screens.main
 
 import android.bluetooth.BluetoothAdapter
+import android.util.Log
 import ru.d_novikov.bluetoothapp.models.SaveModel
 import ru.d_novikov.bluetoothapp.mvp.ViewPresenter
 import java.text.SimpleDateFormat
