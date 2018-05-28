@@ -133,6 +133,5 @@ class ChartFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onRefresh() {
         updateChart()
-
     }
 }
