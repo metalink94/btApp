@@ -2,7 +2,6 @@ package ru.d_novikov.bluetoothapp.screens.chart
 
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.util.Log
@@ -13,19 +12,17 @@ import com.github.mikephil.charting.charts.BarLineChartBase
 import com.github.mikephil.charting.charts.Chart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis.AxisDependency
 import com.github.mikephil.charting.data.ChartData
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.PercentFormatter
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import io.realm.Realm
 import io.realm.kotlin.where
 import ru.d_novikov.bluetoothapp.R
 import ru.d_novikov.bluetoothapp.models.BdModel
-import com.github.mikephil.charting.components.YAxis.AxisDependency
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
 
 
 class ChartFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
