@@ -25,8 +25,7 @@ import io.realm.kotlin.where
 import ru.d_novikov.bluetoothapp.R
 import ru.d_novikov.bluetoothapp.models.BdModel
 import com.github.mikephil.charting.components.YAxis.AxisDependency
-
-
+import com.github.mikephil.charting.formatter.IAxisValueFormatter
 
 
 class ChartFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
@@ -47,7 +46,8 @@ class ChartFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         chart = view.findViewById(R.id.chart)
         swipeToRefresh = view.findViewById(R.id.swipe)
         setup(chart)
-        chart.axisLeft.axisMaximum = 150f
+        chart.axisLeft.axisMaximum = 300f
+        chart.axisLeft.setValueFormatter({ value, axis -> value.toString() })
         chart.axisLeft.axisMinimum = 0f
         chart.axisLeft.setDrawGridLines(false)
         chart.xAxis.setDrawGridLines(false)
