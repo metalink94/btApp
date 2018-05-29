@@ -37,7 +37,7 @@ import ru.d_novikov.bluetoothapp.R;
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    ArrayList markerPoints = new ArrayList();
+    ArrayList<LatLng> markerPoints = new ArrayList();
 
     @Nullable
     @Override
@@ -52,45 +52,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng sydney = new LatLng(-34, 151);
+        LatLng sydney = new LatLng(55.791164, 49.121943);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12));
 
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                if (markerPoints.size() > 1) {
-                    markerPoints.clear();
-                    mMap.clear();
-                }
-                // Adding new item to the ArrayList
-                markerPoints.add(latLng);
-                // Creating MarkerOptions
-                MarkerOptions options = new MarkerOptions();
-                // Setting the position of the marker
-                options.position(latLng);
+        markerPoints.add(new LatLng(55.791157, 49.121842));
+        markerPoints.add(new LatLng(55.787321, 49.122558));
 
-                if (markerPoints.size() == 1) {
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                } else if (markerPoints.size() == 2) {
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                }
-                // Add new marker to the Google Map Android API V2
-                mMap.addMarker(options);
-                // Checks, whether start and end locations are captured
-                if (markerPoints.size() >= 2) {
-                    LatLng origin = (LatLng) markerPoints.get(0);
-                    LatLng dest = (LatLng) markerPoints.get(1);
-                    // Getting URL to the Google Directions API
-                    String url = getDirectionsUrl(origin, dest);
-                    DownloadTask downloadTask = new DownloadTask();
-                    // Start downloading json data from Google Directions API
-                    downloadTask.execute(url);
-                }
+        markerPoints.add(new LatLng(55.794316, 49.121503));
+        markerPoints.add(new LatLng(55.787898, 49.120585));
 
-            }
-        });
+        // Getting URL to the Google Directions API
+        showRoute(markerPoints.get(0),markerPoints.get(1));
+        showRoute(markerPoints.get(2), markerPoints.get(3));
+    }
 
+    private void showRoute(LatLng origin, LatLng dest) {
+        String url = getDirectionsUrl(origin, dest);
+        DownloadTask downloadTask = new DownloadTask();
+        // Start downloading json data from Google Directions API
+        downloadTask.execute(url);
     }
 
     private class DownloadTask extends AsyncTask<String, String, String> {

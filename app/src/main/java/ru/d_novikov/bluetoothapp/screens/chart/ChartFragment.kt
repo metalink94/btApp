@@ -58,8 +58,6 @@ class ChartFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     fun updateChart() {
-        Log.d("JavaClass", "Need to Update chart")
-        Log.d("JavaClass", "Realm object count ${realm.where<BdModel>().findAll().size}")
         setData()
     }
 
