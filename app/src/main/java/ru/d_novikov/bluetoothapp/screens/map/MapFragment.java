@@ -38,6 +38,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     ArrayList<LatLng> markerPoints = new ArrayList();
+    private boolean isRedLine = true;
 
     @Nullable
     @Override
@@ -52,15 +53,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng sydney = new LatLng(55.791164, 49.121943);
+        LatLng kazan = new LatLng(55.791164, 49.121943);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(kazan, 14));
 
         markerPoints.add(new LatLng(55.791157, 49.121842));
         markerPoints.add(new LatLng(55.787321, 49.122558));
 
         markerPoints.add(new LatLng(55.794316, 49.121503));
         markerPoints.add(new LatLng(55.787898, 49.120585));
+
+        for (LatLng latLng : markerPoints) {
+            mMap.addMarker(new MarkerOptions().position(latLng));
+        }
 
         // Getting URL to the Google Directions API
         showRoute(markerPoints.get(0),markerPoints.get(1));
@@ -136,7 +141,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 lineOptions.addAll(points);
                 lineOptions.width(12);
-                lineOptions.color(Color.RED);
+                if (isRedLine) {
+                    lineOptions.color(Color.RED);
+                    isRedLine = false;
+                } else {
+                    lineOptions.color(Color.BLUE);
+                }
                 lineOptions.geodesic(true);
             }
 // Drawing polyline in the Google Map for the i-th route
