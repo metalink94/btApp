@@ -28,7 +28,7 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
 
     override fun onClick(v: View) {
         Log.d("Click", "click at " + v.id)
-        when(v.id) {
+        when (v.id) {
             R.id.button_start -> {
                 openScreenPresenter.onButtonClick()
                 return
@@ -51,6 +51,9 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
     lateinit var timer: TextView
 
     lateinit var callback: DataSendListener
+
+    var seconds: Int = 0
+    var startRun: Boolean = false
 
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
@@ -182,5 +185,45 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
         bluetoothChatService?.stop()
         bluetoothChatService = null
     }
+
+    override fun setTimer() {
+        timer.text = "00:00:00.000"
+    }
+
+    override fun startTimer() {
+        timer()
+        startRun = true
+    }
+
+    val handlerTime = Handler()
+
+    val runnable = object : Runnable {
+        override fun run() {
+            val hours = seconds / 3600
+            val minutes = seconds % 3600 / 60
+            val secs = seconds % 60
+
+            val time = String.format("%d:%02d:%02d", hours, minutes, secs)
+
+            timer.text = time
+
+            if (startRun) {
+                seconds++
+            }
+
+            handlerTime.postDelayed(this, 100)
+        }
+    }
+
+    private fun timer() {
+        handlerTime.post(runnable)
+
+    }
+
+    override fun stopTimer() {
+        startRun = false
+        handlerTime.removeCallbacks(runnable)
+    }
+
 
 }

@@ -26,6 +26,7 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
         realm.executeTransaction { realm ->
             realm.deleteAll()
         }
+        getView()?.setTimer()
     }
 
     private fun getPairedDevices() {
@@ -46,10 +47,12 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     fun onButtonClick() {
         if (!isServiceStart) {
             getView()?.setButtonStart()
+            getView()?.startTimer()
             isServiceStart = true
             startSearchDevices()
         } else {
             getView()?.setButtonStop()
+            getView()?.stopTimer()
             getView()?.stopListener()
             isServiceStart = false
         }

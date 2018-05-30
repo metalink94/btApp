@@ -14,5 +14,8 @@ interface OpenScreenView: IView {
     fun showToast(message: String)
     fun onDataReceived(readMessage: String)
     fun stopListener()
+    fun setTimer()
+    fun startTimer()
+    fun stopTimer()
 
 }
