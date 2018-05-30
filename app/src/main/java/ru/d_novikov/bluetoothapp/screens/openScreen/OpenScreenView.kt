@@ -13,5 +13,6 @@ interface OpenScreenView: IView {
     fun connect(device: BluetoothDevice)
     fun showToast(message: String)
     fun onDataReceived(readMessage: String)
+    fun stopListener()
 
 }

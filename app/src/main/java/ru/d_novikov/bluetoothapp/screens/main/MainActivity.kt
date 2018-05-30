@@ -59,6 +59,8 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
         tab_layout.getTabAt(0)?.icon = ContextCompat.getDrawable(this, R.mipmap.ic_launcher)
         tab_layout.getTabAt(1)?.icon = ContextCompat.getDrawable(this, R.mipmap.ic_launcher)
         tab_layout.getTabAt(2)?.icon = ContextCompat.getDrawable(this, R.mipmap.ic_launcher)
+        tab_layout.getTabAt(3)?.icon = ContextCompat.getDrawable(this, R.mipmap.ic_launcher)
+        tab_layout.getTabAt(4)?.icon = ContextCompat.getDrawable(this, R.mipmap.ic_launcher)
     }
 
     override fun onTabReselected(tab: TabLayout.Tab?) {

@@ -4,15 +4,12 @@ import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
-import android.os.CountDownTimer
 import android.os.Message
-import android.util.Log
 import io.realm.Realm
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import ru.d_novikov.bluetoothapp.models.BdModel
 import ru.d_novikov.bluetoothapp.mvp.ViewPresenter
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -20,7 +17,7 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
 
     lateinit var bluetoothAdapter: BluetoothAdapter
     val BLUETOOTH_DEVICE_NAME = "H-C-2010-06-01"
-    var isNeedSend: Boolean = true
+    var isServiceStart: Boolean = false
     val realm = Realm.getDefaultInstance()
 
     fun onCreate(bluetoothAdapter: BluetoothAdapter?) {
@@ -28,11 +25,6 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
         this.bluetoothAdapter = bluetoothAdapter
         realm.executeTransaction { realm ->
             realm.deleteAll()
-        }
-        if (!bluetoothAdapter.isEnabled) {
-            getView()?.onBluetooth()
-        } else {
-            getPairedDevices()
         }
     }
 
@@ -52,10 +44,22 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     }
 
     fun onButtonClick() {
-        if (!bluetoothAdapter.isEnabled) {
+        if (!isServiceStart) {
             getView()?.setButtonStart()
+            isServiceStart = true
+            startSearchDevices()
         } else {
             getView()?.setButtonStop()
+            getView()?.stopListener()
+            isServiceStart = false
+        }
+    }
+
+    private fun startSearchDevices() {
+        if (!bluetoothAdapter.isEnabled) {
+            getView()?.onBluetooth()
+        } else {
+            getPairedDevices()
         }
     }
 
@@ -73,7 +77,7 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     fun onReceive(device: BluetoothDevice) {
         if (device.name != null && device.name == BLUETOOTH_DEVICE_NAME) {
             getView()?.connect(device)
-            getView()?.stopScanDevices()
+            stopScan()
         }
     }
 

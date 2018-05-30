@@ -1,12 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/swipe"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                                              android:id="@+id/swipe"
+                                              android:layout_width="match_parent"
+                                              android:layout_height="match_parent"
+                                              android:background="@android:color/white"
+    >
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="6dp"
+            >
+
+            <TextView
+                android:id="@+id/day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="День"
+                />
+
+            <TextView
+                android:id="@+id/week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Неделя"
+                />
+
+            <TextView
+                android:id="@+id/month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Месяц"
+
+                />
+
+        </LinearLayout>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </LinearLayout>
 
 </android.support.v4.widget.SwipeRefreshLayout>

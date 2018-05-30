@@ -25,9 +25,17 @@ import ru.d_novikov.bluetoothapp.interfaces.DataSendListener
 
 
 class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
-    override fun onClick(v: View?) {
-        when(v?.id) {
-            R.id.button -> openScreenPresenter.onButtonClick()
+
+    override fun onClick(v: View) {
+        Log.d("Click", "click at " + v.id)
+        when(v.id) {
+            R.id.button_start -> {
+                openScreenPresenter.onButtonClick()
+                return
+            }
+            else -> {
+                Log.d("Click", "else click at " + v.id)
+            }
         }
     }
 
@@ -76,10 +84,11 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_open_screen, container, false)
-        button = view.findViewById(R.id.button)
+        button = view.findViewById(R.id.button_start)
         icon = view.findViewById(R.id.icon_state)
         personState = view.findViewById(R.id.person_state)
         timer = view.findViewById(R.id.timer)
+        button.setOnClickListener(this)
         return view
     }
 
@@ -122,8 +131,6 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
             val action = intent.action
             if (BluetoothDevice.ACTION_FOUND == action) {
                 val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                Log.d(OpenScreenFragment::javaClass.name,
-                        "find device = " + device.name + " macAddress " + device.address)
                 openScreenPresenter.onReceive(device)
             }
         }
@@ -169,6 +176,11 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
 
     override fun onDataReceived(readMessage: String) {
         callback.onDataReceived(readMessage)
+    }
+
+    override fun stopListener() {
+        bluetoothChatService?.stop()
+        bluetoothChatService = null
     }
 
 }
