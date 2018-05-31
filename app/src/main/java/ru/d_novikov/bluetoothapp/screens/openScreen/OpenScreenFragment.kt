@@ -145,6 +145,7 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
             bluetoothChatService?.start()
         }
         bluetoothChatService?.connect(device, false)
+        openScreenPresenter.connectStatus = true
     }
 
     private val handler = @SuppressLint("HandlerLeak")

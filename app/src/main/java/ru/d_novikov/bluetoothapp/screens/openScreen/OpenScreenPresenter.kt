@@ -19,6 +19,7 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     val BLUETOOTH_DEVICE_NAME = "H-C-2010-06-01"
     var isServiceStart: Boolean = false
     val realm = Realm.getDefaultInstance()
+    var connectStatus: Boolean = false
 
     fun onCreate(bluetoothAdapter: BluetoothAdapter?) {
         if (bluetoothAdapter == null) return
@@ -26,6 +27,7 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
         realm.executeTransaction { realm ->
             realm.deleteAll()
         }
+        startSearchDevices()
         getView()?.setTimer()
     }
 
@@ -45,16 +47,19 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     }
 
     fun onButtonClick() {
-        if (!isServiceStart) {
-            getView()?.setButtonStart()
-            getView()?.startTimer()
-            isServiceStart = true
-            startSearchDevices()
+        if (connectStatus) {
+            isServiceStart = if (!isServiceStart) {
+                getView()?.setButtonStart()
+                getView()?.startTimer()
+                true
+            } else {
+                getView()?.setButtonStop()
+                getView()?.stopTimer()
+                getView()?.stopListener()
+                false
+            }
         } else {
-            getView()?.setButtonStop()
-            getView()?.stopTimer()
-            getView()?.stopListener()
-            isServiceStart = false
+            getView()?.showToast("У вас нет подключенных девайсов!")
         }
     }
 
