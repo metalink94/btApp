@@ -20,6 +20,7 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     var isServiceStart: Boolean = false
     val realm = Realm.getDefaultInstance()
     var connectStatus: Boolean = false
+    private var device: BluetoothDevice? = null
 
     fun onCreate(bluetoothAdapter: BluetoothAdapter?) {
         if (bluetoothAdapter == null) return
@@ -49,9 +50,16 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     fun onButtonClick() {
         if (connectStatus) {
             isServiceStart = if (!isServiceStart) {
-                getView()?.setButtonStart()
-                getView()?.startTimer()
-                true
+                if (device != null) {
+                    getView()?.setButtonStart()
+                    getView()?.startTimer()
+                    getView()?.connect(device!!)
+                    getView()?.startGetData()
+                    true
+                } else {
+                    getView()?.showToast("Девайс не найден")
+                    false
+                }
             } else {
                 getView()?.setButtonStop()
                 getView()?.stopTimer()
@@ -72,7 +80,7 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     }
 
     private fun stopScan() {
-        getView()?.stopScanDevices()
+//        getView()?.stopScanDevices()
         bluetoothAdapter.cancelDiscovery()
     }
 
@@ -84,7 +92,8 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
 
     fun onReceive(device: BluetoothDevice) {
         if (device.name != null && device.name == BLUETOOTH_DEVICE_NAME) {
-            getView()?.connect(device)
+            this.device = device
+            connectStatus = true
             stopScan()
         }
     }

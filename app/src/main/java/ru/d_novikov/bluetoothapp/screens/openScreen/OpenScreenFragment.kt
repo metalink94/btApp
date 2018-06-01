@@ -92,13 +92,9 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
         personState = view.findViewById(R.id.person_state)
         timer = view.findViewById(R.id.timer)
         button.setOnClickListener(this)
-        return view
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         openScreenPresenter.setView(this)
         openScreenPresenter.onCreate(bluetoothAdapter)
+        return view
     }
 
     override fun onBluetooth() {
@@ -140,18 +136,18 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
     }
 
     override fun connect(device: BluetoothDevice) {
-        bluetoothChatService = BluetoothChatService(context, handler)
-        if (bluetoothChatService?.state == BluetoothChatService.STATE_NONE) {
-            bluetoothChatService?.start()
-        }
+        bluetoothChatService = BluetoothChatService(context, object : Handler() {
+            override fun handleMessage(msg: Message) {
+                openScreenPresenter.onHandleMessage(msg)
+            }
+        })
         bluetoothChatService?.connect(device, false)
         openScreenPresenter.connectStatus = true
     }
 
-    private val handler = @SuppressLint("HandlerLeak")
-    object : Handler() {
-        override fun handleMessage(msg: Message) {
-            openScreenPresenter.onHandleMessage(msg)
+    override fun startGetData() {
+        if (bluetoothChatService?.state == BluetoothChatService.STATE_NONE) {
+            bluetoothChatService?.start()
         }
     }
 
@@ -212,7 +208,7 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
                 seconds++
             }
 
-            handlerTime.postDelayed(this, 100)
+            handlerTime.postDelayed(this, 1000)
         }
     }
 

@@ -17,5 +17,6 @@ interface OpenScreenView: IView {
     fun setTimer()
     fun startTimer()
     fun stopTimer()
+    fun startGetData()
 
 }

@@ -23,7 +23,7 @@ class MainPresenter : ViewPresenter<MainView>() {
         getView()?.initPager(bluetoothAdapter)
     }
 
-    fun onDataReceved(data: String) {
+    fun onDataReceived(data: String) {
         val test = sdf.format(Calendar.getInstance().time)
         dataList.add(SaveModel(test, data))
     }
