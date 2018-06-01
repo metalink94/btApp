@@ -150,7 +150,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 lineOptions.geodesic(true);
             }
 // Drawing polyline in the Google Map for the i-th route
-            mMap.addPolyline(lineOptions);
+            if (lineOptions != null) {
+                mMap.addPolyline(lineOptions);
+            }
         }
     }
 
