@@ -25,9 +25,11 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     fun onCreate(bluetoothAdapter: BluetoothAdapter?) {
         if (bluetoothAdapter == null) return
         this.bluetoothAdapter = bluetoothAdapter
+        // TODO: comment to prod
         realm.executeTransaction { realm ->
             realm.deleteAll()
         }
+        // close comment
         startSearchDevices()
         getView()?.setTimer()
     }

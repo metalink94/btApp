@@ -1,12 +1,12 @@
 package ru.d_novikov.bluetoothapp.screens.main
 
 import android.bluetooth.BluetoothAdapter
-import android.util.Log
+import android.os.Handler
 import ru.d_novikov.bluetoothapp.models.SaveModel
 import ru.d_novikov.bluetoothapp.mvp.ViewPresenter
+import ru.d_novikov.bluetoothapp.utils.AlertBuilder
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
 
 
 class MainPresenter : ViewPresenter<MainView>() {
@@ -21,6 +21,18 @@ class MainPresenter : ViewPresenter<MainView>() {
             getView()?.showAlertDialog()
         }
         getView()?.initPager(bluetoothAdapter)
+        Handler().postDelayed({
+            showAlert(0)
+        }, 10000)
+
+
+    }
+
+    private fun showAlert(state: Int) {
+        when (state) {
+            0 -> getView()?.showAlert(AlertBuilder.getStressAlert())
+            1 -> getView()?.showAlert(AlertBuilder.getSleepingAlert())
+        }
     }
 
     fun onDataReceived(data: String) {
@@ -32,5 +44,9 @@ class MainPresenter : ViewPresenter<MainView>() {
         if (dataList.isNotEmpty()) {
             getView()?.saveToFile(sdf.format(Calendar.getInstance().time), dataList)
         }
+    }
+
+    fun onAlertClick() {
+        getView()?.hideAlert()
     }
 }

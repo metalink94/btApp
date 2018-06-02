@@ -3,7 +3,10 @@ package ru.d_novikov.bluetoothapp.screens.main
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.support.design.widget.TabLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -13,17 +16,24 @@ import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.d_novikov.bluetoothapp.R
 import ru.d_novikov.bluetoothapp.interfaces.DataSendListener
+import ru.d_novikov.bluetoothapp.models.AlertModel
 import ru.d_novikov.bluetoothapp.models.SaveModel
+import ru.d_novikov.bluetoothapp.screens.alert.AlertFragment
+import ru.d_novikov.bluetoothapp.interfaces.AlertFragmentCallback
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 
 
-class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListener, DataSendListener {
+class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListener, DataSendListener, AlertFragmentCallback {
 
     private val mainPresenter: MainPresenter = MainPresenter()
 
     private var mainPagerAdapter: MainPagerAdapter? = null
+
+    val frManager = supportFragmentManager
+
+    var alertFragment = AlertFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,6 +129,25 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
         super.onDestroy()
         Log.d("MainActivity", "onDestroy()")
         mainPresenter.onDestroy()
+    }
+
+    override fun hideAlert() {
+        frManager.beginTransaction()
+                .remove(alertFragment)
+                .commit()
+    }
+
+    override fun showAlert(model: AlertModel) {
+        alertFragment = AlertFragment.getInstance(model)
+        alertFragment.setCallback(this)
+        frManager.beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .add(R.id.fragment_container, alertFragment)
+                .commit()
+    }
+
+    override fun onAcceptClick() {
+        mainPresenter.onAlertClick()
     }
 
 }

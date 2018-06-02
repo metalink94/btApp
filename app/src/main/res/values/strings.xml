@@ -3,5 +3,9 @@
     <string name="stop">Стоп</string>
     <string name="go">Поехали</string>
     <string name="map">AIzaSyBl8ag-CtP1R-IejZC1D1sgT2ktjzJhl40</string>
+    <string name="have_stress">Наблюдается сильный стресс</string>
+    <string name="stress_description">Chill out!</string>
+    <string name="have_sleeping">Кажется, Вы засыпаете!</string>
+    <string name="sleeping_description">Взбодритесь!</string>
 
 </resources>
