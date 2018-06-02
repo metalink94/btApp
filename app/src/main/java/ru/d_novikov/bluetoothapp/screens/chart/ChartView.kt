@@ -8,4 +8,8 @@ interface ChartView : IView {
     fun setupRefreshLayout()
     fun resetViewport(count: Float)
     fun setData(data: LineChartData)
+    fun hideRefresh()
+    fun selectDay()
+    fun selectWeek()
+    fun selectMonth()
 }

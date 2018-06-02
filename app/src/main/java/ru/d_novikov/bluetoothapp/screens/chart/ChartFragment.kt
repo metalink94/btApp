@@ -2,10 +2,12 @@ package ru.d_novikov.bluetoothapp.screens.chart
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import lecho.lib.hellocharts.gesture.ContainerScrollType
 import lecho.lib.hellocharts.gesture.ZoomType
 import lecho.lib.hellocharts.model.LineChartData
@@ -17,7 +19,15 @@ import ru.d_novikov.bluetoothapp.R
 class ChartFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, ChartView {
 
     lateinit var chart: LineChartView
+
     lateinit var swipeToRefresh: SwipeRefreshLayout
+
+    lateinit var day: TextView
+
+    lateinit var week: TextView
+
+    lateinit var month: TextView
+
     val chartPresenter = ChartPresenter()
 
     companion object {
@@ -29,11 +39,25 @@ class ChartFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, ChartVie
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_chart_screen, container, false)
-        chart = view.findViewById(R.id.chart)
-        swipeToRefresh = view.findViewById(R.id.swipe)
+        init(view)
+        setOnClick()
         chartPresenter.setView(this)
         chartPresenter.onCreate()
         return view
+    }
+
+    private fun init(view: View) {
+        chart = view.findViewById(R.id.chart)
+        swipeToRefresh = view.findViewById(R.id.swipe)
+        day = view.findViewById(R.id.day)
+        week = view.findViewById(R.id.week)
+        month = view.findViewById(R.id.month)
+    }
+
+    private fun setOnClick() {
+        day.setOnClickListener { chartPresenter.onDayClick() }
+        week.setOnClickListener { chartPresenter.onWeekClick() }
+        month.setOnClickListener { chartPresenter.onMonthClick() }
     }
 
     override fun setupChart() {
@@ -72,5 +96,27 @@ class ChartFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, ChartVie
 
     override fun onRefresh() {
         chartPresenter.onRefresh()
+    }
+
+    override fun hideRefresh() {
+        swipeToRefresh.isRefreshing = false
+    }
+
+    override fun selectDay() {
+        day.background = ContextCompat.getDrawable(requireContext(), R.drawable.day_select)
+        week.background = ContextCompat.getDrawable(requireContext(), R.drawable.week_backround)
+        month.background = ContextCompat.getDrawable(requireContext(), R.drawable.month_background)
+    }
+
+    override fun selectWeek() {
+        day.background = ContextCompat.getDrawable(requireContext(), R.drawable.day_background)
+        week.background = ContextCompat.getDrawable(requireContext(), R.drawable.week_select)
+        month.background = ContextCompat.getDrawable(requireContext(), R.drawable.month_background)
+    }
+
+    override fun selectMonth() {
+        day.background = ContextCompat.getDrawable(requireContext(), R.drawable.day_background)
+        week.background = ContextCompat.getDrawable(requireContext(), R.drawable.week_backround)
+        month.background = ContextCompat.getDrawable(requireContext(), R.drawable.month_select)
     }
 }

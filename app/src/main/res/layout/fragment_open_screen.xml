@@ -7,23 +7,24 @@
 
     <View
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="375dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/green_background" />
 
     <ImageView
         android:id="@+id/icon_state"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="185dp"
+        android:layout_height="185dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp"
-        android:src="@mipmap/ic_launcher" />
+        android:layout_marginTop="70dp"
+        android:src="@drawable/ic_stable_icon" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/icon_state"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
         android:text="Ваше состояние:" />
 
     <TextView
@@ -32,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/icon_state"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="50dp"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -52,13 +53,14 @@
 
     <TextView
         android:id="@+id/button_start"
-        android:layout_width="240dp"
-        android:layout_height="30dp"
+        android:layout_width="290dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
         android:background="@drawable/button_background"
         android:gravity="center"
+        android:textSize="18sp"
         android:text="@string/go"
         android:textColor="@android:color/black" />
 
