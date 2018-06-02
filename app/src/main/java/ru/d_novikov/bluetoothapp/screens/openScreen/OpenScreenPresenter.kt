@@ -51,7 +51,7 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
         if (connectStatus) {
             isServiceStart = if (!isServiceStart) {
                 if (device != null) {
-                    getView()?.setButtonStart()
+                    getView()?.setButtonStop()
                     getView()?.startTimer()
                     getView()?.connect(device!!)
                     getView()?.startGetData()
@@ -61,7 +61,7 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
                     false
                 }
             } else {
-                getView()?.setButtonStop()
+                getView()?.setButtonStart()
                 getView()?.stopTimer()
                 getView()?.stopListener()
                 false

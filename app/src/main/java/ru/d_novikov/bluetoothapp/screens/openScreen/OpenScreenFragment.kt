@@ -27,7 +27,6 @@ import ru.d_novikov.bluetoothapp.interfaces.DataSendListener
 class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
 
     override fun onClick(v: View) {
-        Log.d("Click", "click at " + v.id)
         when (v.id) {
             R.id.button_start -> {
                 openScreenPresenter.onButtonClick()
