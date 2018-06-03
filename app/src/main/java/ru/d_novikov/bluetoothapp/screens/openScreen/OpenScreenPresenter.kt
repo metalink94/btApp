@@ -5,12 +5,14 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.os.Message
+import android.util.Log
 import io.realm.Realm
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
 import ru.d_novikov.bluetoothapp.R
 import ru.d_novikov.bluetoothapp.models.BdModel
 import ru.d_novikov.bluetoothapp.mvp.ViewPresenter
+import ru.d_novikov.bluetoothapp.screens.main.MainPresenter
 import java.util.*
 
 
@@ -22,6 +24,7 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     val realm = Realm.getDefaultInstance()
     var connectStatus: Boolean = false
     private var device: BluetoothDevice? = null
+    var state = MainPresenter.STATE_STABLE
 
     fun onCreate(bluetoothAdapter: BluetoothAdapter?) {
         if (bluetoothAdapter == null) return
@@ -33,7 +36,7 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
         // close comment
         startSearchDevices()
         getView()?.setTimer()
-        getView()?.setPersonState(R.string.stable)
+        onStateChange(MainPresenter.STATE_STABLE)
     }
 
     private fun getPairedDevices() {
@@ -114,7 +117,8 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
                 val str = readMessage.replace("[^\\d.]", "")
                 if (str.matches(Regex("[0-9]+"))) {
                     addToRealm(str)
-                    getView()?.onDataReceived(str)
+                    getView()?.onDataReceived(str, state)
+                    Log.d("DataReceive", "onDataReceive $str")
                 }
             }
             OpenScreenFragment.MESSAGE_DEVICE_NAME -> {
@@ -143,5 +147,14 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
 
     fun onDestroy() {
         realm.close()
+    }
+
+    fun onStateChange(state: Int) {
+        this.state = state
+        when (state) {
+            MainPresenter.STATE_STRESS -> getView()?.setPersonState(R.string.stress)
+            MainPresenter.STATE_SLEEP -> getView()?.setPersonState(R.string.sleeping)
+            MainPresenter.STATE_STABLE -> getView()?.setPersonState(R.string.stable)
+        }
     }
 }

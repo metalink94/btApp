@@ -8,5 +8,7 @@
     <string name="have_sleeping">Кажется, Вы засыпаете!</string>
     <string name="sleeping_description">Взбодритесь!</string>
     <string name="stable">Стабильно</string>
+    <string name="stress">Стресс</string>
+    <string name="sleeping">Сонливость</string>
 
 </resources>

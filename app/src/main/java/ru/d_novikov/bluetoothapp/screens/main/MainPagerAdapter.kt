@@ -15,10 +15,11 @@ class MainPagerAdapter(val fm: FragmentManager,
 
     var data: String = ""
     val chartFragment = ChartFragment.getInstance()
+    val openScreenFragment = OpenScreenFragment.getInstance(bluetoothAdapter)
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> OpenScreenFragment.getInstance(bluetoothAdapter)
+            0 -> openScreenFragment
             1 -> chartFragment
             2 -> MapFragment()
             3 -> PulseFragment.getInstance()
@@ -36,6 +37,12 @@ class MainPagerAdapter(val fm: FragmentManager,
     fun updateChart(position: Int) {
         if (position == 1) {
             chartFragment.updateChart()
+        }
+    }
+
+    fun updateStatus(state: Int) {
+        if (openScreenFragment != null) {
+            openScreenFragment.setState(state)
         }
     }
 }

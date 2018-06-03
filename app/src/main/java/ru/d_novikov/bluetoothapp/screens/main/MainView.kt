@@ -11,5 +11,6 @@ interface MainView : IView {
     fun saveToFile(format: String, dataList: MutableList<SaveModel>)
     fun showAlert(model: AlertModel)
     fun hideAlert()
+    fun setStatus(state: Int)
 
 }
