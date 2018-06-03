@@ -7,5 +7,6 @@
     <string name="stress_description">Chill out!</string>
     <string name="have_sleeping">Кажется, Вы засыпаете!</string>
     <string name="sleeping_description">Взбодритесь!</string>
+    <string name="stable">Стабильно</string>
 
 </resources>

@@ -1,6 +1,5 @@
 package ru.d_novikov.bluetoothapp.screens.openScreen
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -219,6 +218,10 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
     override fun stopTimer() {
         startRun = false
         handlerTime.removeCallbacks(runnable)
+    }
+
+    override fun setPersonState(personState: Int) {
+        this.personState.text = getString(personState)
     }
 
 

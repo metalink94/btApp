@@ -21,11 +21,7 @@ class MainPresenter : ViewPresenter<MainView>() {
             getView()?.showAlertDialog()
         }
         getView()?.initPager(bluetoothAdapter)
-        Handler().postDelayed({
-            showAlert(0)
-        }, 10000)
-
-
+        showAlert(0)
     }
 
     private fun showAlert(state: Int) {

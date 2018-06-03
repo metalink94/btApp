@@ -1,5 +1,6 @@
 package ru.d_novikov.bluetoothapp.screens.chart
 
+import android.util.Log
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.kotlin.where
@@ -8,7 +9,6 @@ import lecho.lib.hellocharts.util.ChartUtils
 import ru.d_novikov.bluetoothapp.models.BdModel
 import ru.d_novikov.bluetoothapp.mvp.ViewPresenter
 import java.util.*
-import lecho.lib.hellocharts.model.AxisValue
 
 
 class ChartPresenter : ViewPresenter<ChartView>() {
@@ -32,7 +32,6 @@ class ChartPresenter : ViewPresenter<ChartView>() {
      * STATE = 2 - месяц
      */
     private var state = STATE_DAY
-
 
 
     fun onCreate() {
@@ -99,7 +98,7 @@ class ChartPresenter : ViewPresenter<ChartView>() {
 
     private fun weekAxisValue(size: Int): MutableList<AxisValue> {
         val list = mutableListOf<AxisValue>()
-        for (i in 0..(size -1)) {
+        for (i in 0..(size - 1)) {
             list.add(AxisValue(i.toFloat()).setLabel(days[i]))
         }
         return list
@@ -114,26 +113,64 @@ class ChartPresenter : ViewPresenter<ChartView>() {
         }
     }
 
+    private fun getCalendarForNow(): Calendar {
+        val calendar = GregorianCalendar.getInstance()
+        calendar.time = Date()
+        return calendar
+    }
+
+    private fun setTimeToBeginningOfDay(calendar: Calendar) {
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+    }
+
+    private fun setTimeToEndofDay(calendar: Calendar) {
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        calendar.set(Calendar.MILLISECOND, 999)
+    }
+
+    fun getDateRange(): Pair<Date, Date> {
+        var begining: Date
+        var end: Date
+
+        val calendar1 = getCalendarForNow()
+        calendar1.set(Calendar.DAY_OF_MONTH,
+                calendar1.getActualMinimum(Calendar.DAY_OF_MONTH))
+        setTimeToBeginningOfDay(calendar1)
+        begining = calendar1.time
+
+        val calendar2 = getCalendarForNow()
+        calendar2.set(Calendar.DAY_OF_MONTH,
+                calendar2.getActualMaximum(Calendar.DAY_OF_MONTH))
+        setTimeToEndofDay(calendar2)
+        end = calendar2.time
+
+        return Pair(begining, end)
+    }
+
     private fun monthValues(result: RealmResults<BdModel>): MutableList<PointValue> {
         val list = mutableListOf<PointValue>()
         val monthList = mutableListOf<BdModel>()
+        val pair = getDateRange()
         val cal = Calendar.getInstance()
-        cal.add(Calendar.DATE, -30)
-        val date = cal.time
 
         for (bdModel in result) {
-            if (date.before(bdModel.valueX)) {
+            if (pair.first.before(bdModel.valueX)) {
                 monthList.add(bdModel)
             }
         }
 
-        for (i in 0..30) {
+        for (i in 0..cal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
             var resultData = 0
             var size = 0
             for (bdModel in monthList) {
                 val monthCalendar = Calendar.getInstance()
                 monthCalendar.time = bdModel.valueX
-                cal.time = date
+                cal.time = pair.first
                 cal.add(Calendar.DATE, i)
                 if (cal.get(Calendar.DAY_OF_YEAR) == monthCalendar.get(Calendar.DAY_OF_YEAR) &&
                         cal.get(Calendar.YEAR) == monthCalendar.get(Calendar.YEAR)) {

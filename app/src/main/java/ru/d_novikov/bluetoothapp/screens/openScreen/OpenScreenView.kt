@@ -18,5 +18,6 @@ interface OpenScreenView: IView {
     fun startTimer()
     fun stopTimer()
     fun startGetData()
+    fun setPersonState(personState: Int)
 
 }

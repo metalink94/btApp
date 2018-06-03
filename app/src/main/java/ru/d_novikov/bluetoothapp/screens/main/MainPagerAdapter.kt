@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import ru.d_novikov.bluetoothapp.screens.chart.ChartFragment
 import ru.d_novikov.bluetoothapp.screens.map.MapFragment
 import ru.d_novikov.bluetoothapp.screens.openScreen.OpenScreenFragment
+import ru.d_novikov.bluetoothapp.screens.pulse.PulseFragment
 import ru.d_novikov.bluetoothapp.screens.stub.StubFragment
 
 class MainPagerAdapter(val fm: FragmentManager,
@@ -20,7 +21,8 @@ class MainPagerAdapter(val fm: FragmentManager,
             0 -> OpenScreenFragment.getInstance(bluetoothAdapter)
             1 -> chartFragment
             2 -> MapFragment()
-            3,4 -> StubFragment.getInstance()
+            3 -> PulseFragment.getInstance()
+            4 -> StubFragment.getInstance()
             else -> {
                 OpenScreenFragment.getInstance(bluetoothAdapter)
             }

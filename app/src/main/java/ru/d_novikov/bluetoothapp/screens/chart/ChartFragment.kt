@@ -75,7 +75,7 @@ class ChartFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, ChartVie
     }
 
     override fun resetViewport(rightViewPort: Float) {
-        // Reset viewport height range to (0,100)
+        // Reset viewport height range to (0,300)
         val v = Viewport(chart.maximumViewport)
         v.bottom = 0F
         v.top = 300F

@@ -8,6 +8,7 @@ import android.os.Message
 import io.realm.Realm
 import io.realm.kotlin.createObject
 import io.realm.kotlin.where
+import ru.d_novikov.bluetoothapp.R
 import ru.d_novikov.bluetoothapp.models.BdModel
 import ru.d_novikov.bluetoothapp.mvp.ViewPresenter
 import java.util.*
@@ -26,12 +27,13 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
         if (bluetoothAdapter == null) return
         this.bluetoothAdapter = bluetoothAdapter
         // TODO: comment to prod
-        realm.executeTransaction { realm ->
-            realm.deleteAll()
-        }
+//        realm.executeTransaction { realm ->
+//            realm.deleteAll()
+//        }
         // close comment
         startSearchDevices()
         getView()?.setTimer()
+        getView()?.setPersonState(R.string.stable)
     }
 
     private fun getPairedDevices() {
