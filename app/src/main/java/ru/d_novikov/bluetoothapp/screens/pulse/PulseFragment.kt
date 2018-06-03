@@ -11,9 +11,8 @@ import lecho.lib.hellocharts.model.*
 import lecho.lib.hellocharts.util.ChartUtils
 import lecho.lib.hellocharts.view.LineChartView
 import ru.d_novikov.bluetoothapp.R
-import java.util.*
 
-class PulseFragment: Fragment() {
+class PulseFragment : Fragment() {
 
     lateinit var chart: LineChartView
 
@@ -65,7 +64,7 @@ class PulseFragment: Fragment() {
         lines.add(line)
         val data = LineChartData(lines)
 
-        val axisX =  Axis().setHasSeparationLine(true)
+        val axisX = Axis().setHasSeparationLine(true)
         val axisY = Axis().setHasLines(true)
         axisX.name = "Время"
         axisY.name = "Значение"

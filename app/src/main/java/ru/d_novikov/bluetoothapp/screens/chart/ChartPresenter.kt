@@ -1,6 +1,5 @@
 package ru.d_novikov.bluetoothapp.screens.chart
 
-import android.util.Log
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.kotlin.where

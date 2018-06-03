@@ -6,4 +6,6 @@
 
     <color name="button_bck">#4A90E2</color>
     <color name="button_select">#3D79BE</color>
+    <color name="stress">#9f041b</color>
+    <color name="sleep">#4f80ba</color>
 </resources>

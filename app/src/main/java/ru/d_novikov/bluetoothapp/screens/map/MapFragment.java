@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,11 +58,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(kazan, 14));
 
-        markerPoints.add(new LatLng(55.791157, 49.121842));
-        markerPoints.add(new LatLng(55.787321, 49.122558));
+        markerPoints.add(new LatLng(55.791090, 49.122037)); // KSU
+        markerPoints.add(new LatLng(55.787911, 49.120615)); // Baumana street
 
-        markerPoints.add(new LatLng(55.794316, 49.121503));
-        markerPoints.add(new LatLng(55.787898, 49.120585));
+        markerPoints.add(new LatLng(55.792338, 49.118909)); // KSU - Fiz/chimick
+        markerPoints.add(new LatLng(55.790643, 49.114993)); // Dobray(baumana street)
 
         for (LatLng latLng : markerPoints) {
             mMap.addMarker(new MarkerOptions().position(latLng));
@@ -140,12 +141,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     points.add(position);
                 }
                 lineOptions.addAll(points);
-                lineOptions.width(12);
+                lineOptions.width(8);
                 if (isRedLine) {
-                    lineOptions.color(Color.RED);
+                    lineOptions.color(ContextCompat.getColor(getActivity(), R.color.stress));
                     isRedLine = false;
                 } else {
-                    lineOptions.color(Color.BLUE);
+                    lineOptions.color(ContextCompat.getColor(getActivity(), R.color.sleep));
                 }
                 lineOptions.geodesic(true);
             }
@@ -163,7 +164,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
         // Sensor enabled
         String sensor = "sensor=false";
-        String mode = "mode=driving";
+        String mode = "mode=walking";
         // Building the parameters to the web service
         String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode;
         // Output format
