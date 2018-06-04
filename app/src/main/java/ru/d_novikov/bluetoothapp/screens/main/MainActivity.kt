@@ -93,8 +93,8 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
         }
     }
 
-    override fun onDataReceived(data: String, state: Int) {
-        mainPresenter.onDataReceived(data, state)
+    override fun onDataReceived(value: Int, state: Int) {
+        mainPresenter.onDataReceived(value, state)
     }
 
     override fun saveToFile(time: String, dataList: MutableList<SaveModel>) {

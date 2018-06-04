@@ -116,8 +116,9 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
                 val readMessage = String(readBuf, 0, msg.arg1)
                 val str = readMessage.replace("[^\\d.]", "")
                 if (str.matches(Regex("[0-9]+"))) {
-                    addToRealm(str)
-                    getView()?.onDataReceived(str, state)
+                    val value = str.toIntOrNull() ?: 0
+                    addToRealm(value)
+                    getView()?.onDataReceived(value, state)
                     Log.d("DataReceive", "onDataReceive $str")
                 }
             }
@@ -131,17 +132,16 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
         }
     }
 
-    private fun addToRealm(readMessage: String) {
+    private fun addToRealm(readMessage: Int) {
         basicCRUD(realm, readMessage)
     }
 
-    private fun basicCRUD(realm: Realm, readMessage: String) {
+    private fun basicCRUD(realm: Realm, value: Int) {
         val results = realm.where<BdModel>().findAll()
         realm.executeTransaction({
             val bdModel = it.createObject<BdModel>(results.size)
             bdModel.valueX = Calendar.getInstance().time
-            val int = readMessage.toIntOrNull() ?: 0
-            bdModel.valueY = int
+            bdModel.valueY = value
         })
     }
 

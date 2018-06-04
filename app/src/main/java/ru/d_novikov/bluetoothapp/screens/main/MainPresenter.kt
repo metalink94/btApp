@@ -20,14 +20,7 @@ class MainPresenter : ViewPresenter<MainView>() {
 
     val dataList = mutableListOf<SaveModel>()
     val sdf = SimpleDateFormat("HH:mm:ss.SSS")
-
-
-    private val STANDART_HIGHT = 0
-    private val STANDART_SMALL = 0
-    private var stressState: Int = 0
-    private var sleepState: Int = 0
-    private var veryStressState: Int = 0
-    private var verySleepState: Int = 0
+    private var isAlertShow = false
 
     fun onCreate() {
         if (bluetoothAdapter == null) {
@@ -37,60 +30,46 @@ class MainPresenter : ViewPresenter<MainView>() {
     }
 
     private fun showAlert(state: Int) {
+        isAlertShow = true
         when (state) {
             STATE_STRESS -> getView()?.showAlert(AlertBuilder.getStressAlert())
             STATE_SLEEP -> getView()?.showAlert(AlertBuilder.getSleepingAlert())
         }
     }
 
-    fun onDataReceived(data: String, state: Int) {
+    fun onDataReceived(value: Int, state: Int) {
         val test = sdf.format(Calendar.getInstance().time)
-        dataList.add(SaveModel(test, data))
-        checkData(data, state)
+        dataList.add(SaveModel(test, value))
+        checkData(state)
     }
 
-    private fun checkData(data: String, state: Int) {
-        val intData = data.toInt()
-
-        if (intData >= STANDART_HIGHT + 20) {
-            stressState += 1
-        } else {
-            stressState = 0
+    private fun checkData(state: Int) {
+        if (dataList.isEmpty() || dataList.size < 60) {
+            return
         }
 
-        if (intData <= STANDART_SMALL - 20) {
-            sleepState += 1
-        } else {
-            sleepState = 0
-        }
-
-        if (intData >= STANDART_HIGHT + 50) {
-            veryStressState += 1
-        } else {
-            veryStressState = 0
-        }
-
-        if (intData <= STANDART_SMALL - 50) {
-            verySleepState += 1
-        } else {
-            verySleepState = 0
-        }
-
-        if (veryStressState == 60) {
+        if (dataList[dataList.size - 60].data >= dataList[dataList.size - 1].data + 60 && !isAlertShow) {
             showAlert(STATE_STRESS)
         }
-        if (verySleepState == 60) {
-            showAlert(STATE_SLEEP)
+
+        if (dataList[dataList.size - 60].data >= dataList[dataList.size - 1].data + 60 && !isAlertShow) {
+            showAlert(STATE_STRESS)
         }
 
-        if (stressState == 60 && state != STATE_STRESS) {
+        if (dataList[dataList.size - 60].data <= dataList[dataList.size - 1].data - 60 && state != STATE_STRESS) {
+            showAlert(STATE_STRESS)
+        }
+
+        if (dataList[dataList.size - 60].data >= dataList[dataList.size - 1].data + 20 && state != STATE_STRESS) {
             getView()?.setStatus(STATE_STRESS)
             return
         }
-        if (sleepState == 60 && state != STATE_SLEEP) {
+
+        if (dataList[dataList.size - 60].data <= dataList[dataList.size - 1].data - 20 && state != STATE_SLEEP) {
             getView()?.setStatus(STATE_SLEEP)
             return
         }
+
         if (state != STATE_STABLE) {
             getView()?.setStatus(STATE_STABLE)
         }
@@ -104,5 +83,6 @@ class MainPresenter : ViewPresenter<MainView>() {
 
     fun onAlertClick() {
         getView()?.hideAlert()
+        isAlertShow = false
     }
 }

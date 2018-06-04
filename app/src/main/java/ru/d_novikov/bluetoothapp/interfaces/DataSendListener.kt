@@ -2,5 +2,5 @@ package ru.d_novikov.bluetoothapp.interfaces
 
 interface DataSendListener {
 
-    fun onDataReceived(data: String, state: Int)
+    fun onDataReceived(data: Int, state: Int)
 }

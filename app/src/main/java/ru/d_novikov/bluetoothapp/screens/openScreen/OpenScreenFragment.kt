@@ -172,8 +172,8 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
         Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onDataReceived(readMessage: String, state: Int) {
-        callback.onDataReceived(readMessage, state)
+    override fun onDataReceived(value: Int, state: Int) {
+        callback.onDataReceived(value, state)
     }
 
     override fun stopListener() {
