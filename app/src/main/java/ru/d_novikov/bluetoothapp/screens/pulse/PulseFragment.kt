@@ -61,6 +61,9 @@ class PulseFragment : Fragment() {
         line.setHasPoints(false)
 
         val lines = mutableListOf<Line>()
+        lines.add(getCustomLine(45F, ChartUtils.DEFAULT_COLOR))
+        lines.add(getCustomLine(-45F, ChartUtils.DEFAULT_COLOR))
+        lines.add(getCustomLine(0F, ChartUtils.DEFAULT_DARKEN_COLOR))
         lines.add(line)
         val data = LineChartData(lines)
 
@@ -73,6 +76,25 @@ class PulseFragment : Fragment() {
 
         data.baseValue = 0F
         chart.lineChartData = data
+    }
+
+    private fun getCustomLine(value: Float, color: Int): Line {
+        val line = Line(getZeroValues(value))
+        line.color = color
+        line.shape = ValueShape.CIRCLE
+        line.isCubic = false
+        line.isFilled = false
+        line.setHasLabels(false)
+        line.setHasLines(true)
+        line.setHasPoints(false)
+        return line
+    }
+
+    private fun getZeroValues(value: Float): MutableList<PointValue> {
+        val list = mutableListOf<PointValue>()
+        list.add(PointValue(0F, value))
+        list.add(PointValue(15F, value))
+        return list
     }
 
     private fun getValues(): MutableList<PointValue> {
