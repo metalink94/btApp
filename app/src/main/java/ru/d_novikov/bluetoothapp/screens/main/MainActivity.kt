@@ -32,10 +32,15 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
 
     var alertFragment = AlertFragment()
 
+    companion object {
+        var isShown: Boolean = true
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mainPresenter.setView(this)
+        isShown = true
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, Array(1) { Manifest.permission.ACCESS_FINE_LOCATION }, 1)
         } else {
@@ -116,25 +121,34 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        isShown = true
+    }
+
     override fun onPause() {
         super.onPause()
+        isShown = false
         Log.d("MainActivity", "onPause()")
         mainPresenter.onDestroy()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        isShown = false
         Log.d("MainActivity", "onDestroy()")
         mainPresenter.onDestroy()
     }
 
     override fun hideAlert() {
+        if (!isShown) return
         frManager.beginTransaction()
                 .remove(alertFragment)
                 .commit()
     }
 
     override fun showAlert(model: AlertModel) {
+        if (!isShown) return
         alertFragment = AlertFragment.getInstance(model)
         alertFragment.setCallback(this)
         frManager.beginTransaction()

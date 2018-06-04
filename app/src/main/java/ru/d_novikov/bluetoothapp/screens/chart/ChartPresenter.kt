@@ -19,7 +19,7 @@ class ChartPresenter : ViewPresenter<ChartView>() {
     private val day = calendar.get(Calendar.DAY_OF_YEAR)
     private val year = calendar.get(Calendar.YEAR)
 
-    private val days = arrayOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
+    private val days = arrayOf("Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб")
 
     private val STATE_DAY = 0
     private val STATE_WEEK = 1

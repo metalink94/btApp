@@ -70,6 +70,7 @@ class PulseFragment : Fragment() {
         val axisX = Axis().setHasSeparationLine(true)
         val axisY = Axis().setHasLines(true)
         axisX.name = "Время"
+        axisY.values = mutableListOf()
         axisY.name = "Значение"
         data.axisXBottom = axisX
         data.axisYLeft = axisY

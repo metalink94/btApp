@@ -25,6 +25,7 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     var connectStatus: Boolean = false
     private var device: BluetoothDevice? = null
     var state = MainPresenter.STATE_STABLE
+    var count: Long = 0
 
     fun onCreate(bluetoothAdapter: BluetoothAdapter?) {
         if (bluetoothAdapter == null) return
@@ -116,10 +117,12 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
                 val readMessage = String(readBuf, 0, msg.arg1)
                 val str = readMessage.replace("[^\\d.]", "")
                 if (str.matches(Regex("[0-9]+"))) {
-                    val value = str.toIntOrNull() ?: 0
-                    addToRealm(value)
-                    getView()?.onDataReceived(value, state)
-                    Log.d("DataReceive", "onDataReceive $str")
+                    if (count %2 == 0L) {
+                        val value = str.toIntOrNull() ?: 0
+                        addToRealm(value)
+                        getView()?.onDataReceived(value, state)
+                    }
+                    count += 1
                 }
             }
             OpenScreenFragment.MESSAGE_DEVICE_NAME -> {
@@ -152,9 +155,9 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
     fun onStateChange(state: Int) {
         this.state = state
         when (state) {
-            MainPresenter.STATE_STRESS -> getView()?.setPersonState(R.string.stress)
-            MainPresenter.STATE_SLEEP -> getView()?.setPersonState(R.string.sleeping)
-            MainPresenter.STATE_STABLE -> getView()?.setPersonState(R.string.stable)
+            MainPresenter.STATE_STRESS -> getView()?.setPersonState(R.string.stress, R.drawable.red_background, R.drawable.ic_stress_icon)
+            MainPresenter.STATE_SLEEP -> getView()?.setPersonState(R.string.sleeping, R.drawable.blue_background, R.drawable.ic_sleep_icon)
+            MainPresenter.STATE_STABLE -> getView()?.setPersonState(R.string.stable, R.drawable.green_background, R.drawable.ic_stable_icon)
         }
     }
 }

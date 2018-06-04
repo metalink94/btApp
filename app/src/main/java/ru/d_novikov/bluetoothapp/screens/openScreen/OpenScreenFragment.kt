@@ -48,6 +48,8 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
 
     lateinit var timer: TextView
 
+    lateinit var background: View
+
     lateinit var callback: DataSendListener
 
     var seconds: Int = 0
@@ -89,6 +91,7 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
         icon = view.findViewById(R.id.icon_state)
         personState = view.findViewById(R.id.person_state)
         timer = view.findViewById(R.id.timer)
+        background = view.findViewById(R.id.background)
         button.setOnClickListener(this)
         openScreenPresenter.setView(this)
         openScreenPresenter.onCreate(bluetoothAdapter)
@@ -220,8 +223,10 @@ class OpenScreenFragment : Fragment(), OpenScreenView, View.OnClickListener {
         handlerTime.removeCallbacks(runnable)
     }
 
-    override fun setPersonState(personState: Int) {
+    override fun setPersonState(personState: Int, background: Int, stateIcon: Int) {
         this.personState.text = getString(personState)
+        icon.setImageResource(stateIcon)
+        this.background.setBackgroundResource(background)
     }
 
     fun setState(state: Int) {
