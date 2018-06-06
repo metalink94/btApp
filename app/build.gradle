@@ -20,15 +20,37 @@ android {
     }
     buildTypes {
         release {
+            debuggable false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled true
+            useProguard false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
+        }
     }
-
+    splits {
+        abi {
+            enable true
+            reset()
+            include "x86", "armeabi-v7a", "armeabi-v8a", "x86_64"
+            universalApk true
+        }
+    }
+    // map for the version code
+    project.ext.versionCodes = ['armeabi': 1, 'armeabi-v7a': 2, 'arm64-v8a': 3, 'mips': 5, 'mips64': 6, 'x86': 8, 'x86_64': 9]
+    android.applicationVariants.all { variant ->
+        // assign different version code for each output
+        variant.outputs.each { output ->
+            output.versionCodeOverride =
+                    project.ext.versionCodes.get(output.getFilter(com.android.build.OutputFile.ABI), 0) * 1000000 + android.defaultConfig.versionCode
+        }
+    }
     realm {
-        syncEnabled = true;
+        syncEnabled = true
     }
-
     allprojects {
         repositories {
             maven { url 'https://jitpack.io' }
@@ -37,8 +59,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     implementation 'org.jetbrains.anko:anko-coroutines:0.10.4'
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
@@ -50,11 +72,9 @@ dependencies {
     implementation 'com.google.maps:google-maps-services:0.2.7'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'org.slf4j:slf4j-nop:1.7.25'
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
-//    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-    compile 'com.github.lecho:hellocharts-android:v1.5.8'
+    //    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.github.lecho:hellocharts-android:v1.5.8'
 }
