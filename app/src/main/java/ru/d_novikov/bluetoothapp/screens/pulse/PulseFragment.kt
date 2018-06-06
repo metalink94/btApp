@@ -22,6 +22,8 @@ class PulseFragment : Fragment() {
     private var time = Calendar.getInstance().timeInMillis
 
     companion object {
+        const val UPDATE_STEP = 6
+
         fun getInstance(): PulseFragment {
             return PulseFragment()
         }
@@ -34,8 +36,8 @@ class PulseFragment : Fragment() {
         swipe.setOnRefreshListener {
             swipe.isRefreshing = false
             val calendar = Calendar.getInstance().timeInMillis
-            if (calendar - time > 1000) {
-                getValues(((calendar - time)/ 1000).toInt())
+            if (calendar - time > 2000) { // обнвляем если прошло 2 секунды с предыдущего обновления
+                getValues(((calendar - time)/ 2000).toInt())
                 setDataToChart()
             }
             time = calendar
@@ -75,17 +77,15 @@ class PulseFragment : Fragment() {
         line.setHasPoints(false)
 
         val lines = mutableListOf<Line>()
-        lines.add(getCustomLine(0F, ChartUtils.DEFAULT_COLOR))
-        lines.add(getCustomLine(300F, ChartUtils.DEFAULT_COLOR))
-        lines.add(getCustomLine(0F, ChartUtils.DEFAULT_DARKEN_COLOR))
+        lines.add(getCustomLine(45F, ChartUtils.DEFAULT_COLOR)) // нижняя граница графика
+        lines.add(getCustomLine(150F, ChartUtils.DEFAULT_COLOR)) // верхняя граница графика
         lines.add(line)
         val data = LineChartData(lines)
 
         val axisX = Axis().setHasSeparationLine(true)
         val axisY = Axis().setHasLines(true)
-        axisX.name = "Время"
-        axisY.values = mutableListOf()
-        axisY.name = "Значение"
+        axisX.name = "Время(c)"
+        axisY.name = "Частота пульса"
         data.axisXBottom = axisX
         data.axisYLeft = axisY
 
@@ -107,15 +107,23 @@ class PulseFragment : Fragment() {
 
     private fun getZeroValues(value: Float): MutableList<PointValue> {
         val list = mutableListOf<PointValue>()
+        val size = if (dataList.isEmpty()) 0F else dataList[dataList.size - 1].x
         list.add(PointValue(0F, value))
-        list.add(PointValue(15F, value))
+        list.add(PointValue(size, value))
         return list
     }
 
     private fun getValues(seconds: Int) {
-        val position = if (dataList.isEmpty()) 0F else (dataList.size - 1).toFloat()
+        var position = if (dataList.isEmpty()) 0F else dataList[dataList.size - 1].x +1
         for (i in 0..seconds) {
-            dataList.add(PointValue(position + 1F, Random().nextInt(60-10).toFloat()))
+            if (position == 0F) {
+                dataList.add(PointValue(position, 87f)) // первая точка на графике
+                position += UPDATE_STEP
+                continue
+            }
+            val random = Random().nextInt(15) + 80 // 80- нижняя граница
+            dataList.add(PointValue(position, random.toFloat()))
+            position += UPDATE_STEP // шаг раз в 6 секунд
         }
     }
 }
