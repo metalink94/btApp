@@ -2,6 +2,7 @@ package ru.d_novikov.bluetoothapp.screens.pulse
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +12,14 @@ import lecho.lib.hellocharts.model.*
 import lecho.lib.hellocharts.util.ChartUtils
 import lecho.lib.hellocharts.view.LineChartView
 import ru.d_novikov.bluetoothapp.R
+import java.util.*
 
 class PulseFragment : Fragment() {
 
+    lateinit var swipe: SwipeRefreshLayout
     lateinit var chart: LineChartView
+    private val dataList = mutableListOf<PointValue>()
+    private var time = Calendar.getInstance().timeInMillis
 
     companion object {
         fun getInstance(): PulseFragment {
@@ -25,7 +30,17 @@ class PulseFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_pulse, container, false)
         chart = view.findViewById(R.id.chart)
-
+        swipe = view.findViewById(R.id.swipe)
+        swipe.setOnRefreshListener {
+            swipe.isRefreshing = false
+            val calendar = Calendar.getInstance().timeInMillis
+            if (calendar - time > 1000) {
+                getValues(((calendar - time)/ 1000).toInt())
+                setDataToChart()
+            }
+            time = calendar
+        }
+        getValues(10)
         setDataToChart()
         return view
     }
@@ -34,14 +49,14 @@ class PulseFragment : Fragment() {
         chart.isInteractive = true
         chart.zoomType = ZoomType.HORIZONTAL_AND_VERTICAL
         chart.setContainerScrollEnabled(true, ContainerScrollType.HORIZONTAL)
-        resetViewport(16F)
+        resetViewport(dataList.size.toFloat())
     }
 
     private fun resetViewport(rightViewPort: Float) {
         // Reset viewport height range to (-50,50)
         val v = Viewport(chart.maximumViewport)
-        v.bottom = -50F
-        v.top = 50F
+        v.bottom = 0F
+        v.top = 300F
         v.left = 0F
         v.right = rightViewPort
         chart.maximumViewport = v
@@ -50,8 +65,7 @@ class PulseFragment : Fragment() {
     }
 
     private fun setData() {
-        val values = getValues()
-        val line = Line(values)
+        val line = Line(dataList)
         line.color = ChartUtils.COLOR_RED
         line.shape = ValueShape.CIRCLE
         line.isCubic = false
@@ -61,8 +75,8 @@ class PulseFragment : Fragment() {
         line.setHasPoints(false)
 
         val lines = mutableListOf<Line>()
-        lines.add(getCustomLine(35F, ChartUtils.DEFAULT_COLOR))
-        lines.add(getCustomLine(-35F, ChartUtils.DEFAULT_COLOR))
+        lines.add(getCustomLine(0F, ChartUtils.DEFAULT_COLOR))
+        lines.add(getCustomLine(300F, ChartUtils.DEFAULT_COLOR))
         lines.add(getCustomLine(0F, ChartUtils.DEFAULT_DARKEN_COLOR))
         lines.add(line)
         val data = LineChartData(lines)
@@ -98,42 +112,10 @@ class PulseFragment : Fragment() {
         return list
     }
 
-    private fun getValues(): MutableList<PointValue> {
-        val list = mutableListOf<PointValue>()
-        list.add(PointValue(0F, 0F))
-        list.add(PointValue(1F, 0F))
-        list.add(PointValue(1.2F, 5F))
-        list.add(PointValue(1.4F, 0F))
-        list.add(PointValue(2F, 15F))
-        list.add(PointValue(2.5F, -15F))
-        list.add(PointValue(2.8F, -5F))
-        list.add(PointValue(3.5F, 8F))
-        list.add(PointValue(4.5F, 0F))
-        list.add(PointValue(6F, 0F))
-        list.add(PointValue(6.2F, 4F))
-        list.add(PointValue(6.4F, 0F))
-        list.add(PointValue(7F, 20F))
-        list.add(PointValue(7.2F, -12F))
-        list.add(PointValue(7.4F, -0F))
-        list.add(PointValue(8F, 8F))
-        list.add(PointValue(8.2F, 0F))
-        list.add(PointValue(8.5F, 0F))
-        list.add(PointValue(9F, 7F))
-        list.add(PointValue(9.2F, 0F))
-        list.add(PointValue(9.4F, 18F))
-        list.add(PointValue(9.6F, -15F))
-        list.add(PointValue(9.8F, -0F))
-        list.add(PointValue(10.5F, 8F))
-        list.add(PointValue(10.8F, 0F))
-        list.add(PointValue(11.5F, 0F))
-        list.add(PointValue(11.7F, 4F))
-        list.add(PointValue(12.0F, 0F))
-        list.add(PointValue(12.2F, 20F))
-        list.add(PointValue(12.5F, -22F))
-        list.add(PointValue(12.7F, 0F))
-        list.add(PointValue(13.4F, 8F))
-        list.add(PointValue(13.6F, 0F))
-        list.add(PointValue(15F, 0F))
-        return list
+    private fun getValues(seconds: Int) {
+        val position = if (dataList.isEmpty()) 0F else (dataList.size - 1).toFloat()
+        for (i in 0..seconds) {
+            dataList.add(PointValue(position + 1F, Random().nextInt(60-10).toFloat()))
+        }
     }
 }
