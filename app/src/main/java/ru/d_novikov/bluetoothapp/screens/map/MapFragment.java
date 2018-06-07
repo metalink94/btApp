@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -128,7 +129,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
             ArrayList points = null;
             PolylineOptions lineOptions = null;
-            MarkerOptions markerOptions = new MarkerOptions();
+            if (result == null || result.isEmpty()) {
+                Toast.makeText(getActivity(), R.string.map_problem, Toast.LENGTH_LONG).show();
+                return;
+            }
             for (int i = 0; i < result.size(); i++) {
                 points = new ArrayList();
                 lineOptions = new PolylineOptions();
@@ -150,10 +154,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 lineOptions.geodesic(true);
             }
-// Drawing polyline in the Google Map for the i-th route
-            if (lineOptions != null) {
-                mMap.addPolyline(lineOptions);
-            }
+            // Drawing polyline in the Google Map for the i-th route
+            mMap.addPolyline(lineOptions);
         }
     }
 
