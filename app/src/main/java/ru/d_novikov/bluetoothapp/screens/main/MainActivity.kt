@@ -11,6 +11,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
+import ru.d_novikov.bluetoothapp.BuildConfig
 import ru.d_novikov.bluetoothapp.R
 import ru.d_novikov.bluetoothapp.interfaces.DataSendListener
 import ru.d_novikov.bluetoothapp.models.AlertModel
@@ -105,7 +106,6 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
     override fun saveToFile(time: String, dataList: MutableList<SaveModel>) {
         try {
             val title = time.replace(":", "_").replace(".", "_")
-            Log.d("javaClass", "Title $title")
             val myFile = File(this.getExternalFilesDir(null), "$title.txt")
             if (!myFile.exists())
                 myFile.createNewFile()
@@ -129,14 +129,12 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
     override fun onPause() {
         super.onPause()
         isShown = false
-        Log.d("MainActivity", "onPause()")
         mainPresenter.onDestroy()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         isShown = false
-        Log.d("MainActivity", "onDestroy()")
         mainPresenter.onDestroy()
     }
 

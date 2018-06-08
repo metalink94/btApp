@@ -22,7 +22,7 @@ class MainPagerAdapter(val fm: FragmentManager,
             0 -> openScreenFragment
             1 -> chartFragment
             2 -> MapFragment()
-            3 -> PulseFragment.getInstance()
+            3 -> /*PulseFragment.getInstance()*/ StubFragment.getInstance()
             4 -> StubFragment.getInstance()
             else -> {
                 OpenScreenFragment.getInstance(bluetoothAdapter)

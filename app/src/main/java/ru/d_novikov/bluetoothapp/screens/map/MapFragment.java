@@ -62,8 +62,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         markerPoints.add(new LatLng(55.791090, 49.122037)); // KSU
         markerPoints.add(new LatLng(55.787911, 49.120615)); // Baumana street
 
-        markerPoints.add(new LatLng(55.792338, 49.118909)); // KSU - Fiz/chimick
-        markerPoints.add(new LatLng(55.790643, 49.114993)); // Dobray(baumana street)
+        markerPoints.add(new LatLng(55.784816, 49.118637)); // Right-Bulak
+        markerPoints.add(new LatLng(55.796018, 49.103858)); // Kremlin
 
         for (LatLng latLng : markerPoints) {
             mMap.addMarker(new MarkerOptions().position(latLng));
