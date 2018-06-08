@@ -105,11 +105,56 @@ class ChartPresenter : ViewPresenter<ChartView>() {
 
     private fun addData(result: RealmResults<BdModel>): MutableList<PointValue> {
         return when (state) {
-            STATE_DAY -> dayValues(result)
-            STATE_WEEK -> weekValues(result)
-            STATE_MONTH -> monthValues(result)
+            STATE_DAY -> dayValues(result) //fakeDayValues()
+            STATE_WEEK -> weekValues(result) //fakeWeekValues()
+            STATE_MONTH -> monthValues(result) //fakeMonthValues()
             else -> dayValues(result)
         }
+    }
+
+    private fun fakeDayValues(): MutableList<PointValue> {
+        val list = mutableListOf<PointValue>()
+        list.add(PointValue(0F, 0F))
+        list.add(PointValue(6F, 0F))
+        list.add(PointValue(7F, 54F))
+        list.add(PointValue(12F, 72F))
+        list.add(PointValue(13F, 116F))
+        list.add(PointValue(14F, 90F))
+        list.add(PointValue(18F, 70F))
+        list.add(PointValue(20F, 90F))
+        list.add(PointValue(22F, 62F))
+        list.add(PointValue(23F, 46F))
+        return list
+    }
+
+    private fun fakeWeekValues(): MutableList<PointValue> {
+        val list = mutableListOf<PointValue>()
+        list.add(PointValue(0F, 67F))
+        list.add(PointValue(1F, 86F))
+        list.add(PointValue(2F, 54F))
+        list.add(PointValue(3F, 0F))
+        list.add(PointValue(4F, 116F))
+        list.add(PointValue(5F, 40F))
+        list.add(PointValue(6F, 0F))
+        return list
+    }
+
+    private fun fakeMonthValues(): MutableList<PointValue> {
+        val list = mutableListOf<PointValue>()
+        list.add(PointValue(0F, 67F))
+        list.add(PointValue(1F, 86F))
+        list.add(PointValue(2F, 54F))
+        list.add(PointValue(3F, 0F))
+        list.add(PointValue(4F, 116F))
+        list.add(PointValue(5F, 40F))
+        list.add(PointValue(6F, 0F))
+        list.add(PointValue(7F, 67F))
+        list.add(PointValue(8F, 72F))
+        list.add(PointValue(9F, 56F))
+        list.add(PointValue(10F, 100F))
+        list.add(PointValue(11F, 0F))
+        list.add(PointValue(30F, 0F))
+        return list
     }
 
     private fun getCalendarForNow(): Calendar {

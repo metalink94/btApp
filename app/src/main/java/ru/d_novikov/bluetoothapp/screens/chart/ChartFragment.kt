@@ -1,6 +1,7 @@
 package ru.d_novikov.bluetoothapp.screens.chart
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.widget.SwipeRefreshLayout
@@ -99,7 +100,10 @@ class ChartFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener, ChartVie
     }
 
     override fun hideRefresh() {
-        swipeToRefresh.isRefreshing = false
+        Handler().postDelayed({
+            swipeToRefresh.setRefreshing(false)
+        }, 100)
+
     }
 
     override fun selectDay() {

@@ -77,6 +77,13 @@ class OpenScreenPresenter : ViewPresenter<OpenScreenView>() {
         } else {
             getView()?.showToast("У вас нет подключенных девайсов!")
         }
+        changeStatus()
+    }
+
+    private fun changeStatus() {
+        state += 1
+        if (state == 3) state = 0
+        onStateChange(state)
     }
 
     private fun startSearchDevices() {
