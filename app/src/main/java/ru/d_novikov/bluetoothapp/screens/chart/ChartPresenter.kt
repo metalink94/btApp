@@ -56,7 +56,7 @@ class ChartPresenter : ViewPresenter<ChartView>() {
 
     private fun prepareDataToChart() {
         val result = realm.where<BdModel>().findAll()
-        if (result.isEmpty()) return
+//        if (result.isEmpty()) return
         getView()?.resetViewport((result.size - 1).toFloat())
 
         val values = addData(result)
@@ -77,8 +77,8 @@ class ChartPresenter : ViewPresenter<ChartView>() {
 
         val axisX = if (axisValues.isEmpty()) Axis() else Axis(axisValues)
         val axisY = Axis().setHasLines(true)
-        axisX.name = "Период"
-        axisY.name = "Значение"
+        axisX.name = "Время"
+        axisY.name = "Сопротивление кожи"
         data.axisXBottom = axisX
         data.axisYLeft = axisY
 
@@ -105,7 +105,7 @@ class ChartPresenter : ViewPresenter<ChartView>() {
 
     private fun addData(result: RealmResults<BdModel>): MutableList<PointValue> {
         return when (state) {
-            STATE_DAY -> dayValues(result) //fakeDayValues()
+            STATE_DAY -> /*dayValues(result)*/ fakeDayValues()
             STATE_WEEK -> weekValues(result) //fakeWeekValues()
             STATE_MONTH -> monthValues(result) //fakeMonthValues()
             else -> dayValues(result)

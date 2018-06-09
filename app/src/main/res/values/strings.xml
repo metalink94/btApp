@@ -11,5 +11,6 @@
     <string name="stress">Стресс</string>
     <string name="sleeping">Сонливость</string>
     <string name="map_problem">Проблема с вычислением оптимального пути, проверьте соедениение с интернетом.</string>
+    <string name="connect">Подключиться</string>
 
 </resources>

@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
     override fun initPager(bluetoothAdapter: BluetoothAdapter?) {
         mainPagerAdapter = MainPagerAdapter(supportFragmentManager, bluetoothAdapter)
         container.adapter = mainPagerAdapter
-        container.offscreenPageLimit = 5
+        container.offscreenPageLimit = 3
         tab_layout.setupWithViewPager(container)
         tab_layout.addOnTabSelectedListener(this)
         setIcons()
@@ -71,9 +71,9 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
     private fun setIcons() {
         tab_layout.getTabAt(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_home)
         tab_layout.getTabAt(1)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_analytic)
-        tab_layout.getTabAt(2)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_menu)
-        tab_layout.getTabAt(3)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_profile)
-        tab_layout.getTabAt(4)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_categories)
+//        tab_layout.getTabAt(2)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_menu)
+        tab_layout.getTabAt(2)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_profile)
+//        tab_layout.getTabAt(4)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_categories)
     }
 
     override fun onTabReselected(tab: TabLayout.Tab?) {

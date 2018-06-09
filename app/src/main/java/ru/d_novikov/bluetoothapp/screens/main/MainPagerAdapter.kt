@@ -21,9 +21,9 @@ class MainPagerAdapter(val fm: FragmentManager,
         return when (position) {
             0 -> openScreenFragment
             1 -> chartFragment
-            2 -> MapFragment()
-            3 -> /*PulseFragment.getInstance()*/ StubFragment.getInstance()
-            4 -> StubFragment.getInstance()
+//            2 -> MapFragment()
+            2 -> PulseFragment.getInstance() /*StubFragment.getInstance()*/
+//            4 -> StubFragment.getInstance()
             else -> {
                 OpenScreenFragment.getInstance(bluetoothAdapter)
             }
@@ -31,7 +31,7 @@ class MainPagerAdapter(val fm: FragmentManager,
     }
 
     override fun getCount(): Int {
-        return 5
+        return 3
     }
 
     fun updateChart(position: Int) {
