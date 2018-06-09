@@ -69,10 +69,10 @@ class MainActivity : AppCompatActivity(), MainView, TabLayout.OnTabSelectedListe
     }
 
     private fun setIcons() {
-        tab_layout.getTabAt(0)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_home)
-        tab_layout.getTabAt(1)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_analytic)
+        tab_layout.getTabAt(0)?.icon = ContextCompat.getDrawable(this, R.drawable.main_icon)
+        tab_layout.getTabAt(1)?.icon = ContextCompat.getDrawable(this, R.drawable.increasing_chart)
 //        tab_layout.getTabAt(2)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_menu)
-        tab_layout.getTabAt(2)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_profile)
+        tab_layout.getTabAt(2)?.icon = ContextCompat.getDrawable(this, R.drawable.pulse_line)
 //        tab_layout.getTabAt(4)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_categories)
     }
 

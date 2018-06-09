@@ -56,7 +56,7 @@ class ChartPresenter : ViewPresenter<ChartView>() {
 
     private fun prepareDataToChart() {
         val result = realm.where<BdModel>().findAll()
-//        if (result.isEmpty()) return
+        if (result.isEmpty()) return
         getView()?.resetViewport((result.size - 1).toFloat())
 
         val values = addData(result)
@@ -105,11 +105,21 @@ class ChartPresenter : ViewPresenter<ChartView>() {
 
     private fun addData(result: RealmResults<BdModel>): MutableList<PointValue> {
         return when (state) {
-            STATE_DAY -> /*dayValues(result)*/ fakeDayValues()
+            STATE_DAY -> /*dayValues(result)*/ /*fakeDayValues()*/ ilnurData(result)
             STATE_WEEK -> weekValues(result) //fakeWeekValues()
             STATE_MONTH -> monthValues(result) //fakeMonthValues()
             else -> dayValues(result)
         }
+    }
+
+    private fun ilnurData(result: RealmResults<BdModel>): MutableList<PointValue> {
+        val list = mutableListOf<PointValue>()
+        var i = 0
+        for (data in result) {
+            list.add(PointValue(i.toFloat(), data.valueY.toFloat()))
+            i += 1
+        }
+        return list
     }
 
     private fun fakeDayValues(): MutableList<PointValue> {

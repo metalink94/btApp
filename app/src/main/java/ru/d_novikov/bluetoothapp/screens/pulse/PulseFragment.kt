@@ -22,7 +22,7 @@ class PulseFragment : Fragment() {
     private var time = Calendar.getInstance().timeInMillis
 
     companion object {
-        const val UPDATE_STEP = 6
+        const val UPDATE_STEP = 2
 
         fun getInstance(): PulseFragment {
             return PulseFragment()
@@ -37,7 +37,7 @@ class PulseFragment : Fragment() {
             swipe.isRefreshing = false
             val calendar = Calendar.getInstance().timeInMillis
             if (calendar - time > 2000) { // обнвляем если прошло 2 секунды с предыдущего обновления
-                getValues(((calendar - time)/ 2000).toInt())
+                getValues(((calendar - time) / 2000).toInt())
                 setDataToChart()
             }
             time = calendar
@@ -115,13 +115,20 @@ class PulseFragment : Fragment() {
 
     private fun getValues(seconds: Int) {
         var position = if (dataList.isEmpty()) 0F else dataList[dataList.size - 1].x +1
+        var pos = 80
         for (i in 0..seconds) {
             if (position == 0F) {
                 dataList.add(PointValue(position, 87f)) // первая точка на графике
                 position += UPDATE_STEP
                 continue
             }
-            val random = Random().nextInt(15) + 80 // 80- нижняя граница
+            if (position.toInt() %10 == 0) {
+                pos += 5
+            }
+            if (position.toInt() %25 == 0) {
+                pos -= 10
+            }
+            val random = Random().nextInt(5) + pos // 80- нижняя граница
             dataList.add(PointValue(position, random.toFloat()))
             position += UPDATE_STEP // шаг раз в 6 секунд
         }
