@@ -29,6 +29,7 @@
         android:layout_below="@+id/icon_state"
         android:layout_centerInParent="true"
         android:layout_marginTop="24dp"
+        android:visibility="gone"
         android:text="Ваше состояние:" />
 
     <TextView
@@ -41,6 +42,7 @@
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:visibility="gone"
         tools:text="Стабильное" />
 
     <TextView
@@ -53,14 +55,14 @@
         android:textColor="@android:color/black"
         android:textSize="16sp"
         android:textStyle="bold"
+        android:visibility="gone"
         tools:text="00.00.00" />
 
     <TextView
         android:id="@+id/button_start"
         android:layout_width="290dp"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:layout_marginBottom="24dp"
         android:textColor="@android:color/white"
         android:background="@drawable/alert_button_bg_2"
